@@ -15817,8 +15817,34 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
         font-weight:bold;
     }
                 </style>
+                <style>
+                    #pageChangesBtn {
+                        display: inline-block;
+                        width: 28px;
+                        height: 28px;
+                        line-height: 26px;
+                        text-align: center;
+                        border-radius: 50%;
+                        background: #F59E0B;
+                        border: 2px solid #fff;
+                        color: #fff !important;
+                        font-size: 14px;
+                        font-weight: bold;
+                        animation: pageChangesPulse 1.6s infinite;
+                    }
+                    @keyframes pageChangesPulse {
+                        0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, .7); }
+                        70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+                        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+                    }
+                </style>
                 <form action="javascript:void(0)" onsubmit="return false;" class="navbar-right" id="logoutForm" method="post">
                   <ul class="nav navbar-nav navbar-right">
+                    <li style="padding-top:11px;">
+                      <a href="javascript:void(0)" id="pageChangesBtn" data-toggle="modal" data-target="#pageChangesModal" title="এই পেইজে যা যা পরিবর্তন/আপডেট করা হয়েছে">
+                        <i class="fa fa-info"></i>
+                      </a>
+                    </li>
                     <li class="blink">
                       <a class="UnreadNotice" href="/Hr/Notice/MyNotice" id="UnreadNotice" title="notice">
                       </a>
@@ -17394,23 +17420,10 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
         line-height: normal;
     }
                   </style>
-                  <style>
-                    #pageChangesBtn {
-                        animation: pageChangesPulse 1.6s infinite;
-                    }
-                    @keyframes pageChangesPulse {
-                        0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, .7); }
-                        70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
-                        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-                    }
-                  </style>
                   <div class="panel panel-primary">
                     <div class="panel-heading">
                       <h4 class="panel-title">
                         Admission Summary Report
-                        <button type="button" id="pageChangesBtn" class="btn btn-xs" data-toggle="modal" data-target="#pageChangesModal" title="এই পেইজে যা যা পরিবর্তন/আপডেট করা হয়েছে" style="float:right; background:#F59E0B; border:2px solid #fff; color:#fff; border-radius:50%; width:28px; height:28px; padding:0; line-height:1; font-size:14px; font-weight:bold;">
-                          <i class="fa fa-info"></i>
-                        </button>
                       </h4>
                     </div>
                     <div class="panel-body" id="studentAdmissionSummaryReport" data-formpost="True">
