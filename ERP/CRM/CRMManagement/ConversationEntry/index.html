@@ -15664,6 +15664,19 @@ $(document).ready(function () {
         }
                                       </script>
                                       <script>
+                                        // Manage Student Feedback > Call Stats Type mapping for each Student
+                                        // Feedback checkbox id shown on this page (see
+                                        // ManageStudentFeedback_Offline.html's feedbackData). Id 60
+                                        // ("রিং হয়ে কেটে যায়") has no Call Stats Type on the Manage Student
+                                        // Feedback list yet, so it stays visible in both states. Declared here,
+                                        // before the ready-handler below calls toggleReceivedContent() at the
+                                        // top of its callback, so the map is already populated by then.
+                                        var callStatsTypeMap = {
+                                            1: 'receive', 2: 'receive', 6: 'receive', 32: 'receive', 35: 'receive',
+                                            36: 'receive', 46: 'receive', 9: 'receive', 28: 'receive',
+                                            17: 'not-receive', 10: 'not-receive', 48: 'not-receive',
+                                            60: null, 47: 'receive', 50: 'receive', 51: 'receive'
+                                        };
                                         $(document).ready(function () {
             toggleReceivedContent();
             let maxWidth = 0;
@@ -15774,17 +15787,6 @@ $(document).ready(function () {
                 }
             });
             $('.enroll-badge-section .badge').css('min-width', maxWidth + 'px');
-
-            // Manage Student Feedback > Call Stats Type mapping for each Student Feedback
-            // checkbox id shown on this page (see ManageStudentFeedback_Offline.html's
-            // feedbackData). Id 60 ("রিং হয়ে কেটে যায়") has no Call Stats Type on the
-            // Manage Student Feedback list yet, so it stays visible in both states.
-            var callStatsTypeMap = {
-                1: 'receive', 2: 'receive', 6: 'receive', 32: 'receive', 35: 'receive',
-                36: 'receive', 46: 'receive', 9: 'receive', 28: 'receive',
-                17: 'not-receive', 10: 'not-receive', 48: 'not-receive',
-                60: null, 47: 'receive', 50: 'receive', 51: 'receive'
-            };
 
             function filterStudentFeedbackByCallStatus(selectedValue) {
                 var wantedType = selectedValue == 20 ? 'receive' : (selectedValue == 30 ? 'not-receive' : null);
