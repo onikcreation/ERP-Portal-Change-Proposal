@@ -12806,70 +12806,59 @@ function DeselectSelectedOptionAdd(elem) {
                     <p style="font-weight:bold; margin-bottom:4px;">ফিল্টার বার:</p>
                     <ol style="padding-left:20px; margin:0 0 20px;">
                       <li style="margin-bottom:14px;">
-                        <strong>তিনটি নতুন ফিল্টার যোগ করা হয়েছে</strong>
-                        <p style="margin:4px 0 0; color:#555;">Mentor ও Branch ফিল্টারের পর নতুন করে তিনটি ফিল্টার যোগ করা হয়েছে — Program (মাল্টি-সিলেক্ট), View By (একটাই সিলেক্ট করা যাবে: Programwise / Pinwise), এবং TrID Status (একটাই সিলেক্ট করা যাবে: Working TrID / Active TrID)। সবশেষে ক্যালেন্ডার ও Search বাটন।</p>
+                        <strong>উপরের ফিল্টার অপশনে চারটি নতুন অপশন যোগ করা হয়েছে</strong>
+                        <p style="margin:4px 0 0; color:#555;">Mentor ও Branch ফিল্টারের পর — Program (মাল্টি-সিলেক্ট), View By (একটাই সিলেক্ট করা যাবে: Programwise / Pinwise), TrID Status (একটাই সিলেক্ট করা যাবে: Working TrID / Active TrID), এরপর ক্যালেন্ডার যোগ করা হয়েছে এবং Search বাটন থাকবে।</p>
                       </li>
                       <li style="margin-bottom:14px;">
-                        <strong>Mentor অনুযায়ী Branch অটো-ফিল্টার</strong>
-                        <p style="margin:4px 0 0; color:#555;">Mentor ড্রপডাউনে কোনো মেন্টর সিলেক্ট করলে Branch ড্রপডাউন স্বয়ংক্রিয়ভাবে শুধু সেই মেন্টরের ব্রাঞ্চগুলো দেখাবে (বাকি ব্রাঞ্চ সাময়িকভাবে তালিকা থেকে সরে যাবে)। Mentor সিলেকশন ক্লিয়ার করলে আবার সব ব্রাঞ্চ ফিরে আসবে। (Program-এর তালিকা এই নিয়মের বাইরে — Mentor/Branch যাই সিলেক্ট করা হোক, Program-এর তালিকা সবসময় অপরিবর্তিত থাকবে।)</p>
+                        <strong>Mentor</strong>
+                        <p style="margin:4px 0 0; color:#555;">Mentor ড্রপডাউনে কোনো মেন্টর সিলেক্ট করা হলে Branch ড্রপডাউনে স্বয়ংক্রিয়ভাবে শুধু সেই মেন্টরের ব্রাঞ্চগুলো দেখাবে (বাকি ব্রাঞ্চ তালিকায় দেখাবে না)। এই মেনুতে ক্লিক করা হলে ইউজার অনুযায়ি সে একজন মেন্টর হলে ডিফল্টভাবে তার নাম সিলেক্ট থেকে অটো সার্চ হবে। ইউজার মেন্টর না হলে, All Mentor ও All Branch সিলেক্ট থেকে ডাটা লোড হবে। ইউজার পারমিশন অনুযায়ি ব্রাঞ্চ লোড হবে।</p>
                       </li>
                       <li style="margin-bottom:14px;">
-                        <strong>Today/Yesterday ড্রপডাউনের বদলে ক্যালেন্ডার</strong>
-                        <p style="margin:4px 0 0; color:#555;">Date ফিল্টার এখন একটা ক্যালেন্ডার/ডেট-পিকার (ডিফল্টে আজকের তারিখ সিলেক্ট থাকে, ভবিষ্যতের কোনো তারিখ সিলেক্ট করা যায় না)। আজকের তারিখ সিলেক্ট থাকলে আগের "Today"-এর মতোই আচরণ করে। অতীতের কোনো তারিখ সিলেক্ট করে সার্চ করলে কলামের নাম বদলে হয় "Entry on (তারিখ)" ও সংখ্যাও তারিখ যত পুরনো তত কমতে থাকে (প্রতিদিন আনুমানিক ২০% কম, সর্বনিম্ন ৩০%-এ থেমে যায়)।</p>
+                        <strong>Program</strong>
+                        <p style="margin:4px 0 0; color:#555;">প্রোগ্রাম সিলেকশনে সকল প্রোগ্রাম দেখাবে। নির্দিষ্ট বা একাধিক প্রোগ্রাম সিলেক্ট করে ডাটা সার্চ করা যাবে।</p>
                       </li>
                       <li style="margin-bottom:14px;">
-                        <strong>নতুন ফিল্টার: "TrID Status"</strong>
-                        <p style="margin:4px 0 0; color:#555;">Working TrID (ডিফল্ট) সিলেক্ট থাকলে সব Tracking ID দেখাবে (আগের মতোই)। Active TrID সিলেক্ট করলে যেসব Tracking ID-এর Action কলামে Entry বাটন নেই (অর্থাৎ Pending = ০, আর কোনো এন্ট্রি বাকি নেই) সেগুলো ফলাফল থেকে বাদ যাবে।</p>
+                        <strong>View By</strong>
+                        <p style="margin:4px 0 0; color:#555;">Programwise/Pinwise যেকোনো একটি সিলেক্ট করে ডাটা সার্চ করা যাবে। ডিফল্টভাবে Programwise সিলেক্ট থাকবে।</p>
+                      </li>
+                      <li style="margin-bottom:14px;">
+                        <strong>TrID Status</strong>
+                        <p style="margin:4px 0 0; color:#555;">Working TrID/Active TrID যেকোনো একটি সিলেক্ট করে ডাটা সার্চ করা যাবে। ডিফল্টভাবে Working TrID সিলেক্ট থাকবে। এই অবস্থায় সার্চ করা হলে সিলেক্টেড তারিখ অনুযায়ি যে Tracking ID গুলোতে ডাটা এন্ট্রি করা হয়েছে সেই অনুযায়ি তথ্য দেখাবে। Active TrID সিলেক্ট করলে যেসব Tracking ID এখন একটিভ আছে সেই অনুযায়ি ডাটা দেখাবে।</p>
                       </li>
                       <li>
-                        <strong>পেইজ খোলার সাথে সাথে ডিফল্ট মেন্টর সিলেক্ট + অটো-সার্চ</strong>
-                        <p style="margin:4px 0 0; color:#555;">Mentor ড্রপডাউনে ডিফল্টভাবে "[6] Md. Asaduzzaman (Lebu)" সিলেক্ট করা থাকে, এবং পেইজ খোলার সাথে সাথেই স্বয়ংক্রিয়ভাবে সার্চ হয়ে তার ডাটা দেখায় (Branch ড্রপডাউনও নিজে থেকে সংকুচিত হয়ে যায়)। ইউজার চাইলে পরে ফিল্টার বদলে আবার সার্চ করতে পারবে।</p>
+                        <strong>ক্যালেন্ডার অপশন</strong>
+                        <p style="margin:4px 0 0; color:#555;">ক্যালেন্ডার/ডেট-পিকারে ডিফল্টভাবে আজকের তারিখ সিলেক্ট থাকবে, ভবিষ্যতের কোনো তারিখ সিলেক্ট করা যাবে না। আজকের তারিখ সিলেক্ট থাকলে নিচের ডাটা টেবিলে Entry on Today দেখাবে। অতীতের কোনো তারিখ সিলেক্ট করে সার্চ করলে কলামের নাম বদলে হয় "Entry on (Selected Date)" হবে।</p>
                       </li>
                     </ol>
                     <p style="font-weight:bold; margin-bottom:4px;">ডাটা টেবিল:</p>
-                    <ol style="padding-left:20px; margin:0 0 20px;">
+                    <ol style="padding-left:20px; margin:0;">
                       <li style="margin-bottom:14px;">
                         <strong>তিনটি কলাম বাদ</strong>
-                        <p style="margin:4px 0 0; color:#555;">"Created By", "Initiated By" ও "Executed By" কলাম তিনটি সম্পূর্ণ বাদ দেওয়া হয়েছে। "Entry By" করা হয়েছে (ডাটা অপরিবর্তিত)।</p>
+                        <p style="margin:4px 0 0; color:#555;">"Created By", "Initiated By" ও "Executed By" কলাম তিনটি সম্পূর্ণ বাদ দেওয়া হয়েছে।</p>
                       </li>
                       <li style="margin-bottom:14px;">
                         <strong>চারটি নতুন কলাম যোগ</strong>
-                        <p style="margin:4px 0 0; color:#555;">"Entry By" (কল করার পর যে ডাটা এন্ট্রি হয়েছে), "Today Entry" (নির্দিষ্ট দিনে কতগুলো এন্ট্রি হয়েছে), "Avg. Call Time" (গড় কল-সময়) এবং "Entry Till Today" (আজ পর্যন্ত মোট এন্ট্রি) — এই চারটি কলাম যোগ করা হয়েছে।</p>
+                        <p style="margin:4px 0 0; color:#555;">"Entry By" (কল করে যে ডাটা এন্ট্রি হয়েছে), "Entry on Today/Selected Date" (নির্দিষ্ট দিনে কতগুলো এন্ট্রি হয়েছে), "Avg. Call Time" (গড় কল-সময়) এবং "Entry Till Today" (আজ পর্যন্ত মোট এন্ট্রি) — এই চারটি কলাম যোগ করা হয়েছে।</p>
                       </li>
                       <li style="margin-bottom:14px;">
                         <strong>Date ফিল্টার অনুযায়ী কলামের নাম বদল</strong>
-                        <p style="margin:4px 0 0; color:#555;">ক্যালেন্ডারে আজকের তারিখ সিলেক্ট থাকলে কলামের নাম থাকে "Today Entry"। অতীতের কোনো তারিখ সিলেক্ট করলে কলামের নাম বদলে হয় "Entry on (DD-Month-YYYY)" — ঠিক যে তারিখ সিলেক্ট করা হয়েছে তাই দেখাবে। তবে "Entry Till Today" কলামের নাম ও সংখ্যা সবসময় অপরিবর্তিত থাকে (ক্যালেন্ডারে যে তারিখই সিলেক্ট করা হোক না কেন), যেহেতু এটা আজ পর্যন্ত মোট এন্ট্রি বোঝায়।</p>
-                      </li>
-                      <li style="margin-bottom:14px;">
-                        <strong>এন্ট্রি সংখ্যা ক্লিক করে সরাসরি ডিটেইলস দেখা</strong>
-                        <p style="margin:4px 0 0; color:#555;">"Today Entry" ও "Entry Till Today" কলামের পাশাপাশি এখন প্রতিটা "Total" রো-এর সংখ্যাও (case-subtotal, program-group Total, Pinwise-এর person-Total, Grand Total) ক্লিকযোগ্য (লিংকের মতো) — ক্লিক করলে সরাসরি Details Report পেইজে সেই নির্দিষ্ট সংখ্যক রেকর্ডের বিস্তারিত তালিকা দেখাবে, সঠিক তারিখ ও সংশ্লিষ্ট সবগুলো টিম মেম্বারের নামেই ভাগ হয়ে। যদি ক্লিক করা সংখ্যাটা একাধিক Tracking ID মিলে হয়ে থাকে, Details Report পেইজে প্রতিটা Tracking ID-এর জন্য আলাদা প্যানেল/টেবিল দেখাবে।</p>
+                        <p style="margin:4px 0 0; color:#555;">Date ফিল্টারে "Today" সিলেক্ট থাকলে কলাম দুটির নাম হবে "Entry On Today" ও আগের কোনো তারিখ সিলেক্ট করলে এই কলামের নাম বদলে "Entry On (Selected Date)" আকারে দেখাবে।</p>
                       </li>
                       <li style="margin-bottom:14px;">
                         <strong>একই Tracking ID-তে একাধিক টিম মেম্বারের এন্ট্রি</strong>
-                        <p style="margin:4px 0 0; color:#555;">কোনো Tracking ID-তে একাধিক টিম মেম্বার এন্ট্রি করে থাকলে প্রতিটা টিম মেম্বারের জন্য আলাদা সারি দেখাবে (নিজস্ব Entry By, Today Entry, Avg. Call Time সহ), কিন্তু বাকি তথ্য (Program, Total Student, Pending, Tracking ID ইত্যাদি) সব সারির উপর একসাথে মার্জ করে দেখাবে যেহেতু সেগুলো ব্যক্তি-ভিত্তিক না, পুরো Tracking ID-ভিত্তিক তথ্য। এমন ক্ষেত্রে সেই Tracking ID-এর নিজস্ব একটা Total রো-ও যোগ হয়েছে (Programwise ভিউতে)।</p>
+                        <p style="margin:4px 0 0; color:#555;">কোনো Tracking ID-তে একাধিক টিম মেম্বার এন্ট্রি করে থাকলে প্রতিটা টিম মেম্বারের জন্য আলাদা সারি দেখাবে (নিজস্ব Entry By, Entry on Today/Selected Date, Avg. Call Time সহ), কিন্তু বাকি তথ্য (Program, Total Student, Pending, Tracking ID ইত্যাদি) সব সারির উপর একসাথে মার্জ করে দেখাবে যেহেতু সেগুলো ব্যক্তি-ভিত্তিক না, পুরো Tracking ID-ভিত্তিক তথ্য।</p>
+                      </li>
+                      <li style="margin-bottom:14px;">
+                        <strong>এন্ট্রি সংখ্যা ক্লিক করে সরাসরি ডিটেইলস দেখা</strong>
+                        <p style="margin:4px 0 0; color:#555;">"Entry on Today/Selected Date" ও "Entry Till Today" কলামের সংখ্যাগুলো ক্লিকযোগ্য (লিংকের মতো) — ক্লিক করলে সরাসরি Details Report পেইজে সেই নির্দিষ্ট সংখ্যক রেকর্ডের বিস্তারিত তালিকা দেখাবে, আলাদাভাবে কোনো ফিল্টার/সার্চ করার প্রয়োজন হবে না। Total সংখ্যায় ক্লিক করা হলে একাধিক Tracking ID এর ডাটা একসাথে থাকলে Details পেইজে সবগুলো Tracking ID এর ডাটা আলাদা টেবিল আকারে দেখাবে।</p>
                       </li>
                       <li style="margin-bottom:14px;">
                         <strong>Pending শেষ হলে Entry বাটন লুকানো</strong>
-                        <p style="margin:4px 0 0; color:#555;">কোনো Tracking ID-এর Pending সংখ্যা ০ হয়ে গেলে (অর্থাৎ আর কোনো এন্ট্রি বাকি নেই), সেই সারির Action কলামে Entry বাটন আর দেখাবে না। Action কলামে Entry বাটন থাকলে সেটাতে ক্লিক করলে Conversation Entry পেইজ নতুন ট্যাবে খুলে যাবে।</p>
+                        <p style="margin:4px 0 0; color:#555;">কোনো Tracking ID-এর Pending সংখ্যা ০ হয়ে গেলে (অর্থাৎ আর কোনো এন্ট্রি বাকি নেই), সেই সারির Action কলামে Entry বাটন আর দেখাবে না।</p>
                       </li>
-                      <li style="margin-bottom:14px;">
+                      <li>
                         <strong>View By: Pinwise ভিউ</strong>
-                        <p style="margin:4px 0 0; color:#555;">View By-তে "Pinwise" সিলেক্ট করলে একই ডাটা Program-এর বদলে Entry By (টিম মেম্বার) অনুযায়ী গ্রুপ করে দেখাবে — একজন টিম মেম্বারের সব এন্ট্রি একসাথে দেখা যাবে, তিনি একাধিক ভিন্ন প্রোগ্রামে কাজ করলেও। প্রতিটা টিম মেম্বারের জন্য একটা Total রো সবসময় দেখাবে, তার এন্ট্রি সংখ্যা একটা হলেও।</p>
-                      </li>
-                      <li>
-                        <strong>প্রোগ্রাম অনুযায়ী Organization ট্যাগ নির্ধারণ</strong>
-                        <p style="margin:4px 0 0; color:#555;">প্রোগ্রামের নামের সাথে দেখানো Organization ট্যাগ এই ক্রম অনুযায়ী নির্ধারিত হয় — নামে "(Online)" থাকলে ONLINE CARE (সর্বোচ্চ অগ্রাধিকার), না থাকলে ও নামে "Medical" থাকলে UNMESH, বাকি সব ক্ষেত্রে UDVASH। Grand Total রো-তে Today Entry কলামের যোগফলও এখন দেখানো হয়।</p>
-                      </li>
-                    </ol>
-                    <p style="font-weight:bold; margin-bottom:4px;">Details Report (নতুন, স্বতন্ত্র মেনু):</p>
-                    <ol style="padding-left:20px; margin:0;">
-                      <li style="margin-bottom:14px;">
-                        <strong>"Select Information To View" ও কলাম দেখানোর নিয়ম</strong>
-                        <p style="margin:4px 0 0; color:#555;">"Select Information To View"-এর সব ফিল্ড এখন ডিফল্টে বামপাশে (Non-selected) থাকে। ডাটা টেবিলে সবসময় শুধু Serial, Reg. No, Nick Name, Status, Student Feedback, Conversation Duration, Remarks কলামগুলো দেখাবে — বাকি কলাম শুধু তখনই দেখাবে যখন সেটা ডানপাশে নিয়ে সার্চ করা হবে।</p>
-                      </li>
-                      <li>
-                        <strong>একাধিক Tracking ID-এর যোগফলে ক্লিক করলে আলাদা আলাদা প্যানেল</strong>
-                        <p style="margin:4px 0 0; color:#555;">Mentor Dashboard থেকে কোনো Total/Grand Total সংখ্যায় ক্লিক করলে, যদি সেটা একাধিক Tracking ID মিলে হয়ে থাকে, তাহলে উপরের "Tracking ID" বক্সে সবগুলো ID কমা দিয়ে দেখাবে এবং নিচে প্রতিটা Tracking ID-এর জন্য সম্পূর্ণ স্বতন্ত্র একটা "Details" প্যানেল (নিজস্ব হেডার তথ্য + নিজস্ব ডাটা টেবিল) দেখাবে — প্রতিটা প্যানেল আলাদাভাবে এক্সপান্ড/কলাপ্স করা যায়, হেডিং-এ "Details - Tracking ID: X" লেখা থাকে। একটামাত্র Tracking ID-এর ক্ষেত্রে আগের মতোই একটা টেবিল দেখাবে, পেজিনেশনসহ।</p>
+                        <p style="margin:4px 0 0; color:#555;">View By-তে "Pinwise" সিলেক্ট করলে একই ডাটা Program-এর বদলে Entry By (টিম মেম্বার) অনুযায়ী গ্রুপ করে দেখাবে — একজন টিম মেম্বারের সব এন্ট্রি একসাথে দেখা যাবে, তিনি একাধিক ভিন্ন প্রোগ্রামে কাজ করলেও।</p>
                       </li>
                     </ol>
                   </div>
