@@ -12385,9 +12385,13 @@ function DeselectSelectedOptionAdd(elem) {
                     var pgPending = sumBy(pgRows, 'Pending');
                     var pgToday   = dateAdjust(sumEntries(pgRows, 'TodayDateEntry'), dateLabel);
 
-                    /* total sub-rows (one per team-member entry) across every case in this program group */
+                    /* total sub-rows across every case in this program group — one per
+                       team-member entry, plus one extra for each case's own subtotal row
+                       (only added when that case has more than one team member) */
                     var pgSubRowCount = 0;
-                    $.each(pgRows, function (_, c) { pgSubRowCount += c.Entries.length; });
+                    $.each(pgRows, function (_, c) {
+                        pgSubRowCount += c.Entries.length + (c.Entries.length > 1 ? 1 : 0);
+                    });
 
                     /* spacer between program groups */
                     if (i > 0) {
@@ -12438,6 +12442,20 @@ function DeselectSelectedOptionAdd(elem) {
 
                             $tbody.append($tr);
                         });
+
+                        /* Case subtotal row — only when more than one team member worked
+                           this Tracking ID. The Targeted Program column isn't repeated
+                           here since it's still covered by the program group's rowspan. */
+                        if (caseRowCount > 1) {
+                            var caseToday = dateAdjust(sumBy(item.Entries, 'TodayDateEntry'), dateLabel);
+                            $tbody.append(
+                                '<tr>' +
+                                '<td colspan="3" style="text-align:right;"><strong>Total</strong></td>' +
+                                '<td><strong>' + caseToday + '</strong></td>' +
+                                '<td colspan="8"></td>' +
+                                '</tr>'
+                            );
+                        }
                     });
 
                     /* Total row — only for multi-case program groups */
