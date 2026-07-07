@@ -12215,6 +12215,10 @@ function DeselectSelectedOptionAdd(elem) {
                     var selectedMentors = $('#mentorIds').val();
                     var selectedBranches = $('#branchIds').val();
                     var selectedPrograms = $('#programIds').val();
+                    // Active TrID = only Tracking IDs that still have an Entry button (i.e.
+                    // Pending > 0) — anything fully done drops out. Working TrID (default)
+                    // keeps everything, same as before.
+                    var trIdStatus = $('#trIdStatus').val();
                     var filtered = $.grep(fakeDashboardData, function (row) {
                         var mentorOk = !selectedMentors || selectedMentors.length === 0
                             || $.inArray(String(row.MentorId), selectedMentors) !== -1;
@@ -12222,7 +12226,8 @@ function DeselectSelectedOptionAdd(elem) {
                             || $.inArray(String(row.BranchId), selectedBranches) !== -1;
                         var programOk = !selectedPrograms || selectedPrograms.length === 0
                             || $.inArray(String(row.ProgramId), selectedPrograms) !== -1;
-                        return mentorOk && branchOk && programOk;
+                        var trIdOk = (trIdStatus !== 'Active') || ((parseInt(row.Pending, 10) || 0) > 0);
+                        return mentorOk && branchOk && programOk && trIdOk;
                     });
                     renderDashboard(filtered);
                 }, 500);
