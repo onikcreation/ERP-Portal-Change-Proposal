@@ -11147,7 +11147,7 @@ let feedbackData = [
             <button type="button" class="pcm-copy-btn" title="সম্পূর্ণ কনটেন্ট কপি করুন" style="float:right; margin:-2px 8px 0 0; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; border-radius:4px; padding:2px 10px; font-size:12px; line-height:1.6; cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align:-1px; margin-right:4px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>Copy</button>
             <h4 class="modal-title" id="pageChangesModalLabel">এই পেইজে যা যা পরিবর্তন/আপডেট করা হয়েছে</h4>
           </div>
-          <div class="modal-body" style="max-height:65vh; overflow-y:auto;">
+          <div class="modal-body" style="height:65vh; overflow-y:auto;">
             <p style="font-weight:bold; margin-bottom:12px;">নতুন আপডেট:</p>
             <ol style="padding-left:20px; margin:0;">
               <li style="margin-bottom:16px;">
@@ -11172,25 +11172,47 @@ let feedbackData = [
     </div>
     <script>
       // Copy button in the "New Updates" popup header — copies that
-      // modal's full body text to the clipboard.
+      // modal's full body text to the clipboard. Tries the modern
+      // Clipboard API first (most reliable); if it's unavailable/denied,
+      // falls back to selecting the modal body's real, visible text (more
+      // reliable for execCommand('copy') than a detached/hidden textarea,
+      // and inside a Bootstrap modal a detached node can lose focus to the
+      // modal's own focus trap before the copy fires). Only claims success
+      // ("Copied!") when a copy actually happened.
+      function pcmFeedback(btn, label) {
+          var original = btn.innerHTML;
+          btn.innerHTML = label;
+          setTimeout(function () { btn.innerHTML = original; }, 1800);
+      }
+      function pcmSelectionFallbackCopy(btn, modalBody) {
+          try {
+              var range = document.createRange();
+              range.selectNodeContents(modalBody);
+              var sel = window.getSelection();
+              sel.removeAllRanges();
+              sel.addRange(range);
+              var ok = document.execCommand('copy');
+              sel.removeAllRanges();
+              pcmFeedback(btn, ok ? 'Copied!' : 'সিলেক্ট হয়েছে, Ctrl+C চাপুন');
+          } catch (err) {
+              pcmFeedback(btn, 'কপি ব্যর্থ হয়েছে');
+          }
+      }
       document.addEventListener('click', function (e) {
           var btn = e.target.closest('.pcm-copy-btn');
           if (!btn) return;
           var modalBody = btn.closest('.modal-content').querySelector('.modal-body');
           if (!modalBody) return;
           var text = modalBody.innerText || modalBody.textContent || '';
-          var ta = document.createElement('textarea');
-          ta.value = text;
-          ta.style.position = 'fixed';
-          ta.style.left = '-9999px';
-          document.body.appendChild(ta);
-          ta.focus();
-          ta.select();
-          try { document.execCommand('copy'); } catch (err) {}
-          document.body.removeChild(ta);
-          var original = btn.innerHTML;
-          btn.innerHTML = 'Copied!';
-          setTimeout(function () { btn.innerHTML = original; }, 1500);
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(function () {
+                  pcmFeedback(btn, 'Copied!');
+              }).catch(function () {
+                  pcmSelectionFallbackCopy(btn, modalBody);
+              });
+          } else {
+              pcmSelectionFallbackCopy(btn, modalBody);
+          }
       });
     </script>
     <script type="text/javascript">
