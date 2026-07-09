@@ -8289,6 +8289,12 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
     #convSummaryTable tbody tr:last-child td.conv-detail-col {
         border-bottom: 2px solid #7fa0d6;
     }
+    #convSummaryTable tr.conv-mentor-header td {
+        background: #f5f5f5;
+        font-weight: bold;
+        text-align: left;
+        border-top: 2px solid #ddd;
+    }
                   </style>
                   <input name="__RequestVerificationToken" type="hidden" value="demo-anti-forgery-token-not-real">
                   <div class="panel panel-primary">
@@ -8306,6 +8312,7 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                       <div class="col-md-4">
                         <select class="form-control" id="groupBy" name="groupBy" style="min-width:100%">
                           <option value="branch">Branch Wise</option>
+                          <option value="mentorBranch">Mentor Branch Wise</option>
                           <option value="program">Program Wise</option>
                           <option value="person">Contacted Person Wise</option>
                           <option value="medium" selected="selected">Contact Medium Wise</option>
@@ -8674,6 +8681,29 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                           <option value="details">Details</option>
                         </select>
                       </div>
+                      <label class="control-label col-md-2" for="Branch Mentor:">
+                        Branch Mentor:
+                      </label>
+                      <div class="col-md-4">
+                        <select class="form-control" id="branchMentor" name="branchMentor" style="min-width:100%">
+                          <option value="0" selected="selected">All</option>
+                          <option value="6">6 - Md. Asaduzzaman (Lebu)</option>
+                          <option value="25">25 - Uzzal Kumar Haldar (Uzzal)</option>
+                          <option value="41">41 - Md. Jewel Mia (Jewel)</option>
+                          <option value="53">53 - Muhammad Nazmul Hoque (Nazmul)</option>
+                          <option value="65">65 - Md. Rafiqul Islam (Robi)</option>
+                          <option value="68">68 - Md. Masudur Rahman (Masud)</option>
+                          <option value="77">77 - Md Samiul Islam (Samiul)</option>
+                          <option value="83">83 - Sakhawat Hossen (Sakhawat)</option>
+                          <option value="103">103 - Nur Mohammad (Nur)</option>
+                          <option value="449">449 - Md. Asaduzzaman (Rontu)</option>
+                          <option value="499">499 - Md. Anayetul Islam (Anayet)</option>
+                          <option value="572">572 - Mohammad Ali Khan (Ali)</option>
+                          <option value="581">581 - Sana Ullah (Sana)</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-2" for="Display Per Page:">
                         Display Per Page:
                       </label>
@@ -12367,6 +12397,29 @@ function DeselectSelectedOptionAdd(elem) {
                 { name: 'Gazipur Udvash', org: 'UDVASH' },
                 { name: 'Uttara Udvash', org: 'UDVASH' }
             ];
+            // Same "Branch Mentor" roster (id values) as AdmissionSummaryReport's
+            // mentor filter — the #branchMentor dropdown above already carries the
+            // id/label options; this just maps which ids own which of this
+            // report's 12 fake branches. Only 4 of the 13 real mentor ids are
+            // mapped below (this report only has 12 fake branches to go around,
+            // matching AdmissionSummaryReport's ~2-3 branches/mentor ratio) —
+            // picking any of the other 9 mentors in the filter just shows no
+            // data, same as a mentor with no assigned branches would live.
+            var MENTOR_BRANCH_MAP = {
+                '6': ['Azimpur Udvash', 'Badda Udvash', 'Banasree Udvash'],
+                '25': ['Mirpur Udvash', 'Uttara Udvash', 'Gazipur Udvash'],
+                '41': ['Chattogram Udvash', 'Cumilla Udvash', 'Bogura Udvash'],
+                '53': ['Rajshahi Unmesh', 'Khulna Unmesh', 'Sylhet Online Care']
+            };
+            var MENTOR_ORDER = Object.keys(MENTOR_BRANCH_MAP);
+            var BRANCH_MENTOR_MAP = {};
+            MENTOR_ORDER.forEach(function (id) {
+                MENTOR_BRANCH_MAP[id].forEach(function (branch) { BRANCH_MENTOR_MAP[branch] = id; });
+            });
+            function mentorLabel(id) {
+                var text = $('#branchMentor option[value="' + id + '"]').text().trim();
+                return text || id;
+            }
             var FAKE_PROGRAMS = [
                 { value: '74', text: 'Medical Admission Program' },
                 { value: '68', text: 'Engineering Admission Program' },
@@ -12520,11 +12573,16 @@ function DeselectSelectedOptionAdd(elem) {
                 var dateTo = $('#dateTo').val();
                 var personVals = getSelectedOrEmpty('#contactedPerson');
                 var mediumVals = getSelectedOrEmpty('#contactMedium');
+                var mentorVal = $('#branchMentor').val();
 
                 var orgNameById = { '1': 'UDVASH', '2': 'UNMESH', '13': 'ONLINE CARE' };
 
                 return FAKE_RECORDS.filter(function (r) {
                     if (orgVal && orgVal !== '0' && orgNameById[orgVal] && r.organization !== orgNameById[orgVal]) return false;
+                    // A mentor with no branches mapped in MENTOR_BRANCH_MAP (9 of
+                    // the 13) correctly matches nothing, same as picking a real
+                    // mentor with no assigned branches would on the live site.
+                    if (mentorVal && mentorVal !== '0' && (MENTOR_BRANCH_MAP[mentorVal] || []).indexOf(r.branch) === -1) return false;
                     if (branchVals.length) {
                         // branchIds values are branch ids in the option list, but fake
                         // records only carry the branch name — match by name via the
@@ -12575,6 +12633,10 @@ function DeselectSelectedOptionAdd(elem) {
             // and what a drill-down click filters Details by.
             var GROUP_BY_CONFIG = {
                 branch: { label: 'Branch', getValue: function (r) { return r.branch; }, crossTabKey: 'medium' },
+                // Same rows as Branch Wise, but sectioned under a bold mentor-name
+                // header per mentor (mentorGrouped) — matches AdmissionSummaryReport's
+                // "Mentor Wise" branch-select behavior.
+                mentorBranch: { label: 'Branch', getValue: function (r) { return r.branch; }, crossTabKey: 'medium', mentorGrouped: true },
                 program: { label: 'Program', getValue: function (r) { return r.program; }, crossTabKey: 'medium' },
                 person: { label: 'যে নম্বরে কথা হয়েছে', getValue: function (r) { return r.contactedPerson; }, crossTabKey: 'medium' },
                 medium: { label: 'যে মাধ্যমে কথা হয়েছে', getValue: function (r) { return CONTACT_MEDIUM_LABELS[r.contactMedium]; }, crossTabKey: 'person' },
@@ -12737,12 +12799,54 @@ function DeselectSelectedOptionAdd(elem) {
                     }
                 }
 
-                var perPage = getPerPage();
+                // Mentor Branch Wise: same rows as Branch Wise, re-partitioned into
+                // per-mentor clusters (each cluster keeps the rows' existing sorted
+                // order, just regrouped) with a header row marking where each
+                // mentor's section starts and a "Total" row summing that mentor's
+                // branches right after its last row (the very last row overall is
+                // still the ordinary Grand Total across every mentor). Shown on a
+                // single page — splitting a mentor's branches across pages would
+                // break the grouping.
+                var mentorSectionStart = {};
+                var mentorSectionEnd = {};
+                var mentorTotals = {};
+                if (config.mentorGrouped) {
+                    var byMentor = {};
+                    order.forEach(function (key) {
+                        var mentor = BRANCH_MENTOR_MAP[groups[key].value] || 'অন্যান্য';
+                        (byMentor[mentor] = byMentor[mentor] || []).push(key);
+                    });
+                    var mentorList = MENTOR_ORDER.filter(function (m) { return byMentor[m]; });
+                    Object.keys(byMentor).forEach(function (m) { if (mentorList.indexOf(m) === -1) mentorList.push(m); });
+                    var regrouped = [];
+                    mentorList.forEach(function (mentor) {
+                        var keys = byMentor[mentor];
+                        mentorSectionStart[keys[0]] = mentor;
+                        mentorSectionEnd[keys[keys.length - 1]] = mentor;
+                        var mt = { totalCount: 0, totalDuration: 0, catCounts: {}, catDurations: {} };
+                        categories.forEach(function (c) { mt.catCounts[c.key] = 0; mt.catDurations[c.key] = 0; });
+                        keys.forEach(function (key) {
+                            var g = groups[key];
+                            mt.totalCount += g.totalCount;
+                            mt.totalDuration += g.totalDuration;
+                            categories.forEach(function (c) {
+                                mt.catCounts[c.key] += g.catCounts[c.key];
+                                mt.catDurations[c.key] += g.catDurations[c.key];
+                            });
+                        });
+                        mentorTotals[mentor] = mt;
+                        regrouped = regrouped.concat(keys);
+                    });
+                    order = regrouped;
+                }
+
+                var perPage = config.mentorGrouped ? Math.max(1, order.length) : getPerPage();
                 var totalPages = Math.max(1, Math.ceil(order.length / perPage));
                 viewState.page = Math.min(Math.max(1, viewState.page), totalPages);
                 var startIdx = (viewState.page - 1) * perPage;
                 var pageKeys = order.slice(startIdx, startIdx + perPage);
                 var leadingCols = hasSub ? 3 : 2;
+                var totalCols = leadingCols + 2 + categories.length * 2;
 
                 var html = '<div class="table-responsive"><table class="table table-bordered table-striped" id="convSummaryTable">';
                 html += '<colgroup>';
@@ -12776,6 +12880,9 @@ function DeselectSelectedOptionAdd(elem) {
                 html += '</thead><tbody>';
 
                 pageKeys.forEach(function (key, i) {
+                    if (mentorSectionStart[key]) {
+                        html += '<tr class="conv-mentor-header"><td colspan="' + totalCols + '">' + mentorLabel(mentorSectionStart[key]) + '</td></tr>';
+                    }
                     var g = groups[key];
                     html += '<tr>' +
                         '<td class="conv-id-col conv-id-first">' + (startIdx + i + 1) + '</td>' +
@@ -12791,6 +12898,15 @@ function DeselectSelectedOptionAdd(elem) {
                             '<td class="conv-detail-col' + lastCls + '">' + (cnt ? formatDuration(g.catDurations[c.key]) : '-') + '</td>';
                     });
                     html += '</tr>';
+                    if (mentorSectionEnd[key]) {
+                        var mt = mentorTotals[mentorSectionEnd[key]];
+                        html += '<tr style="background:#f0f0f0;"><td colspan="' + leadingCols + '" style="text-align:right;"><strong>Total</strong></td>';
+                        html += '<td><strong>' + mt.totalCount + '</strong></td><td><strong>' + formatDuration(mt.totalDuration) + '</strong></td>';
+                        categories.forEach(function (c) {
+                            html += '<td><strong>' + mt.catCounts[c.key] + '</strong></td><td><strong>' + formatDuration(mt.catDurations[c.key]) + '</strong></td>';
+                        });
+                        html += '</tr>';
+                    }
                 });
 
                 html += '<tr style="background:#f5f5f5;"><td colspan="' + leadingCols + '" class="conv-id-col conv-id-first" style="text-align:right;"><strong>Grand Total</strong></td>';
