@@ -9053,24 +9053,33 @@ table tfoot th::after {
     }
                 </style>
                 <style>
-                    #pageChangesBtn {
-                        display: inline-block;
+                    #pageChangesBtnGroup {
+                        display: inline-flex;
+                        gap: 8px;
                         position: absolute;
                         left: 50%;
                         top: 11px;
                         transform: translateX(-50%);
+                        z-index: 1031;
+                    }
+                    #pageChangesBtn, #pageChangesBtnOld {
+                        display: inline-block;
                         padding: 6px 12px;
                         line-height: 1.2;
                         text-align: center;
                         border-radius: 6px;
-                        background: #F59E0B;
                         border: 2px solid #fff;
                         color: #fff !important;
                         font-size: 12.5px;
                         font-weight: bold;
                         white-space: nowrap;
-                        z-index: 1031;
+                    }
+                    #pageChangesBtn {
+                        background: #F59E0B;
                         animation: pageChangesPulse 1.6s infinite;
+                    }
+                    #pageChangesBtnOld {
+                        background: #6B7280;
                     }
                     @keyframes pageChangesPulse {
                         0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, .7); }
@@ -9078,9 +9087,14 @@ table tfoot th::after {
                         100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
                     }
                 </style>
-                <a href="javascript:void(0)" id="pageChangesBtn" data-toggle="modal" data-target="#pageChangesModal" title="এই পেইজে যা যা পরিবর্তন/আপডেট করা হয়েছে">
-                  New Updates
-                </a>
+                <div id="pageChangesBtnGroup">
+                  <a href="javascript:void(0)" id="pageChangesBtn" data-toggle="modal" data-target="#pageChangesModal" title="এই পেইজে যা নতুন পরিবর্তন/আপডেট করা হয়েছে">
+                    New Updates
+                  </a>
+                  <a href="javascript:void(0)" id="pageChangesBtnOld" data-toggle="modal" data-target="#pageChangesModalOld" title="এই পেইজে আগে যা যা পরিবর্তন/আপডেট করা হয়েছিল">
+                    Old Updates
+                  </a>
+                </div>
                 <form action="javascript:void(0)" onsubmit="return false;" class="navbar-right" id="logoutForm" method="post">
                   <ul class="nav navbar-nav navbar-right">
                     <li class="blink">
@@ -16832,6 +16846,18 @@ $(document).ready(function () {
                                                                       </div>
                                                                     </div>
                                                                     <style>
+                                                                      /* This page's own captured CSS has a page-wide ".modal .modal-dialog"
+                                                                         rule (display:flex; height:100%; ...) meant for a different modal
+                                                                         elsewhere on the page — it was stretching this popup's dialog to
+                                                                         the full viewport height too, shrinking the visible white box down
+                                                                         to just its content height inside all that empty flex space, which
+                                                                         is what made it look smaller than on the other 3 pages (none of
+                                                                         which have that stray rule). Reset back to Bootstrap's normal block
+                                                                         layout for just these two modals. */
+                                                                      #pageChangesModal .modal-dialog, #pageChangesModalOld .modal-dialog {
+                                                                        display: block;
+                                                                        height: auto;
+                                                                      }
                                                                       @media screen and (min-width: 768px) {
                                                                         #pageChangesModal .modal-dialog, #pageChangesModalOld .modal-dialog {
                                                                           width: 60%;
@@ -16844,10 +16870,41 @@ $(document).ready(function () {
                                                                           <div class="modal-header" style="background:#4338CA; color:#fff; border-top-left-radius:4px; border-top-right-radius:4px;">
                                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff; opacity:.85; text-shadow:none;"><span aria-hidden="true">&times;</span></button>
                                                                             <button type="button" class="pcm-copy-btn" title="সম্পূর্ণ কনটেন্ট কপি করুন" style="float:right; margin:-2px 8px 0 0; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; border-radius:4px; padding:2px 10px; font-size:12px; line-height:1.6; cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align:-1px; margin-right:4px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>Copy</button>
-                                                                            <h4 class="modal-title" id="pageChangesModalLabel">এই পেইজে যা যা পরিবর্তন/আপডেট করা হয়েছে</h4>
+                                                                            <h4 class="modal-title" id="pageChangesModalLabel">এই পেইজে যা নতুন পরিবর্তন/আপডেট করা হয়েছে</h4>
                                                                           </div>
                                                                           <div class="modal-body" style="height:65vh; overflow-y:auto;">
                                                                             <p style="font-weight:bold; margin-bottom:12px;">নতুন আপডেট:</p>
+                                                                            <ol style="padding-left:20px; margin:0;">
+                                                                              <li style="margin-bottom:12px;">
+                                                                                <strong>"Executed By" → "Assigned To"</strong> (কাকে assign করা হয়েছে)।
+                                                                              </li>
+                                                                              <li style="margin-bottom:12px;">
+                                                                                <strong>"Last Entry By" → "Last Executed By"</strong> (কে আসলে এন্ট্রি করেছে)।
+                                                                              </li>
+                                                                              <li style="margin-bottom:12px;">
+                                                                                <strong>Status "Pending"-এর নাম বদলে "Not Called Yet" হয়েছে</strong> (ডিফল্ট সিলেক্টেড)।
+                                                                              </li>
+                                                                              <li>
+                                                                                <strong>Search করার পর প্রাপ্ত ডাটা টেবিলে পরিবর্তিত নাম অনুযায়ি কলামের নাম দেখাতে হবে।</strong>
+                                                                              </li>
+                                                                            </ol>
+                                                                          </div>
+                                                                          <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal">বন্ধ করুন</button>
+                                                                          </div>
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                    <div class="modal fade" id="pageChangesModalOld" tabindex="-1" role="dialog" aria-labelledby="pageChangesModalOldLabel">
+                                                                      <div class="modal-dialog modal-lg" role="document">
+                                                                        <div class="modal-content">
+                                                                          <div class="modal-header" style="background:#6B7280; color:#fff; border-top-left-radius:4px; border-top-right-radius:4px;">
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff; opacity:.85; text-shadow:none;"><span aria-hidden="true">&times;</span></button>
+                                                                            <button type="button" class="pcm-copy-btn" title="সম্পূর্ণ কনটেন্ট কপি করুন" style="float:right; margin:-2px 8px 0 0; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; border-radius:4px; padding:2px 10px; font-size:12px; line-height:1.6; cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align:-1px; margin-right:4px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>Copy</button>
+                                                                            <h4 class="modal-title" id="pageChangesModalOldLabel">এই পেইজে আগে যা যা পরিবর্তন/আপডেট করা হয়েছিল</h4>
+                                                                          </div>
+                                                                          <div class="modal-body" style="height:65vh; overflow-y:auto;">
+                                                                            <p style="font-weight:bold; margin-bottom:12px;">আগের আপডেট:</p>
                                                                             <ol style="padding-left:20px; margin:0;">
                                                                               <li style="margin-bottom:16px;">
                                                                                 <strong>Institute ও Gender এর মাঝে নতুন "Version" ফিল্ড যোগ করা হয়েছে।</strong>

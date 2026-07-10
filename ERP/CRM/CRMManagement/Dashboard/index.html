@@ -8115,6 +8115,35 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
         font-weight:bold;
     }
                 </style>
+                <style>
+                    #pageChangesBtn {
+                        display: inline-block;
+                        position: absolute;
+                        left: 50%;
+                        top: 11px;
+                        transform: translateX(-50%);
+                        padding: 6px 12px;
+                        line-height: 1.2;
+                        text-align: center;
+                        border-radius: 6px;
+                        background: #F59E0B;
+                        border: 2px solid #fff;
+                        color: #fff !important;
+                        font-size: 12.5px;
+                        font-weight: bold;
+                        white-space: nowrap;
+                        z-index: 1031;
+                        animation: pageChangesPulse 1.6s infinite;
+                    }
+                    @keyframes pageChangesPulse {
+                        0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, .7); }
+                        70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+                        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+                    }
+                </style>
+                <a href="javascript:void(0)" id="pageChangesBtn" data-toggle="modal" data-target="#pageChangesModal" title="এই পেইজে যা নতুন পরিবর্তন/আপডেট করা হয়েছে">
+                  New Updates
+                </a>
                 <form action="javascript:void(0)" onsubmit="return false;" class="navbar-right" id="logoutForm" method="post">
                   <ul class="nav navbar-nav navbar-right">
                     <li class="blink">
@@ -10911,6 +10940,92 @@ function getDPI() {
           document.addEventListener('submit', function (e) {
             e.preventDefault();
           }, true);
+        </script>
+        <style>
+          @media screen and (min-width: 768px) {
+            #pageChangesModal .modal-dialog, #pageChangesModalOld .modal-dialog {
+              width: 60%;
+            }
+          }
+        </style>
+        <div class="modal fade" id="pageChangesModal" tabindex="-1" role="dialog" aria-labelledby="pageChangesModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header" style="background:#4338CA; color:#fff; border-top-left-radius:4px; border-top-right-radius:4px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff; opacity:.85; text-shadow:none;"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="pcm-copy-btn" title="সম্পূর্ণ কনটেন্ট কপি করুন" style="float:right; margin:-2px 8px 0 0; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; border-radius:4px; padding:2px 10px; font-size:12px; line-height:1.6; cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align:-1px; margin-right:4px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>Copy</button>
+                <h4 class="modal-title" id="pageChangesModalLabel">এই পেইজে যা নতুন পরিবর্তন/আপডেট করা হয়েছে</h4>
+              </div>
+              <div class="modal-body" style="height:65vh; overflow-y:auto;">
+                <p style="font-weight:bold; margin-bottom:12px;">নতুন আপডেট:</p>
+                <ol style="padding-left:20px; margin:0;">
+                  <li style="margin-bottom:12px;">
+                    <strong>Executed By কলামের নাম বদলে "Assigned To" হয়েছে (অর্থ একই — কাকে assign করা হয়েছে তা বোঝানো হয়েছে)।</strong>
+                  </li>
+                  <li style="margin-bottom:12px;">
+                    <strong>Data Entry কলামের নাম বদলে "Call Received" হয়েছে।</strong> (এই কলামে শুধু Call Received ডাটাগুলো দেখাতে হবে।)
+                  </li>
+                  <li style="margin-bottom:12px;">
+                    <strong>Pending কলামের নাম বদলে "Pending (NCY+CNR)" হয়েছে।</strong> (Pending (NCY+CNR) কলামে Not Called Yet + Call Not Received যোগ করে দেখাতে হবে।)
+                  </li>
+                  <li style="margin-bottom:12px;">
+                    <strong>সংখ্যা ক্লিকেবল হবে: Total Student, Call Received, Pending (NCY+CNR)</strong> — তিনটা কলামের প্রতিটি সংখ্যা ক্লিকযোগ্য হবে, ক্লিক করা হলে Details Report-এ নিয়ে গিয়ে সংশ্লিষ্ট স্ট্যাটাস অনুযায়ি ডাটা দেখাবে (Total Student = সব স্ট্যাটাস, Call Received = শুধু Call Received, Pending (NCY+CNR) = শুধু Not Called Yet + Call Not Received)।
+                  </li>
+                  <li>
+                    <strong>Entry বাটনে ক্লিক করা হলে প্রথমে Not Called Yet ডাটাগুলো ক্রমান্বয়ে একটির পর একটি আসবে।</strong> Not Called Yet শেষ হলে Call Not Received ডাটাগুলো আসবে।
+                  </li>
+                </ol>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">বন্ধ করুন</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          // Copy button in the "New Updates" popup header — copies that
+          // modal's full body text to the clipboard. Tries the modern
+          // Clipboard API first (most reliable); if it's unavailable/denied,
+          // falls back to selecting the modal body's real, visible text (more
+          // reliable for execCommand('copy') than a detached/hidden textarea,
+          // and inside a Bootstrap modal a detached node can lose focus to the
+          // modal's own focus trap before the copy fires). Only claims success
+          // ("Copied!") when a copy actually happened.
+          function pcmFeedback(btn, label) {
+              var original = btn.innerHTML;
+              btn.innerHTML = label;
+              setTimeout(function () { btn.innerHTML = original; }, 1800);
+          }
+          function pcmSelectionFallbackCopy(btn, modalBody) {
+              try {
+                  var range = document.createRange();
+                  range.selectNodeContents(modalBody);
+                  var sel = window.getSelection();
+                  sel.removeAllRanges();
+                  sel.addRange(range);
+                  var ok = document.execCommand('copy');
+                  sel.removeAllRanges();
+                  pcmFeedback(btn, ok ? 'Copied!' : 'সিলেক্ট হয়েছে, Ctrl+C চাপুন');
+              } catch (err) {
+                  pcmFeedback(btn, 'কপি ব্যর্থ হয়েছে');
+              }
+          }
+          document.addEventListener('click', function (e) {
+              var btn = e.target.closest('.pcm-copy-btn');
+              if (!btn) return;
+              var modalBody = btn.closest('.modal-content').querySelector('.modal-body');
+              if (!modalBody) return;
+              var text = modalBody.innerText || modalBody.textContent || '';
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                  navigator.clipboard.writeText(text).then(function () {
+                      pcmFeedback(btn, 'Copied!');
+                  }).catch(function () {
+                      pcmSelectionFallbackCopy(btn, modalBody);
+                  });
+              } else {
+                  pcmSelectionFallbackCopy(btn, modalBody);
+              }
+          });
         </script>
           </body>
         </html>
