@@ -58924,13 +58924,31 @@ function DeselectSelectedOptionAdd(elem) {
                                           var a = e.target.closest('a[href]');
                                           if (!a) return;
                                           var href = a.getAttribute('href');
-                                          if (href && href.indexOf('#') !== 0 && href.indexOf('javascript:') !== 0) {
+                                          if (href && href.indexOf('#') !== 0 && href.indexOf('javascript:') !== 0 && href.indexOf('../') !== 0) {
                                               e.preventDefault();
                                           }
                                       }, true);
                                       document.addEventListener('submit', function (e) {
                                           e.preventDefault();
                                       }, true);
+
+                                      // Sibling-page navigation for the left sidebar menu - Student Search is
+                                      // also converted, in the same "Student Info" submenu group.
+                                      function siblingPageUrl(folder, offlineFileName) {
+                                          if (location.protocol === 'file:') {
+                                              return '../' + folder + '/' + offlineFileName;
+                                          }
+                                          return '../' + folder + '/';
+                                      }
+                                      var siblingLivePages = {
+                                          '/Student/Information/StudentInfoSearch': { folder: 'StudentSearch', file: 'StudentSearch_Offline.html' }
+                                      };
+                                      Object.keys(siblingLivePages).forEach(function (route) {
+                                          var target = siblingLivePages[route];
+                                          document.querySelectorAll('a.submenuitem[href="' + route + '"]').forEach(function (a) {
+                                              a.setAttribute('href', siblingPageUrl(target.folder, target.file));
+                                          });
+                                      });
                                     </script>
                                     <script>
                                       // Demo-only: the real "View" button posts the filter form to the live
