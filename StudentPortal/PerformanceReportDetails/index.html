@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance | Udvash-Unmesh</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-page: #f0eef5;
+    --bg-white: #fff;
+    --bg-surface: #f8f7fb;
+    --border-color: #e8e4f0;
+    --border-light: #e0dcea;
+    --text-primary: #2a1650;
+    --text-body: #444;
+    --text-muted: #888;
+    --text-faint: #aaa;
+    --topbar-shadow: rgba(58,32,96,.10);
+    --select-bg: #fff;
+    --select-color: #333;
+    --metric-bg: #fff;
+    --rank-card-bg: #fff;
+    --chart-card-bg: #fff;
+    --table-head-bg: #f8f7fb;
+    --table-hover: #faf9fd;
+    --table-border: #f3f0fb;
+    --sidebar-active-bg: #f0eef5;
+    --sidebar-active-color: #5a3e8a;
+    --sidebar-hover: #f8f7fb;
+    --score-trend-card: #fff;
+    --lv-total-bg: #f8f7fb;
+  }
+
+  body.dark {
+    --bg-page: #111018;
+    --bg-white: #1c1a27;
+    --bg-surface: #15131f;
+    --border-color: #2e2a40;
+    --border-light: #2e2a40;
+    --text-primary: #e8e4f8;
+    --text-body: #c8c4d8;
+    --text-muted: #8880a8;
+    --text-faint: #55507a;
+    --topbar-shadow: rgba(0,0,0,.4);
+    --select-bg: #1c1a27;
+    --select-color: #c8c4d8;
+    --metric-bg: #1c1a27;
+    --rank-card-bg: #1c1a27;
+    --chart-card-bg: #1c1a27;
+    --table-head-bg: #15131f;
+    --table-hover: #1f1c2e;
+    --table-border: #2a273a;
+    --sidebar-active-bg: #2a2540;
+    --sidebar-active-color: #c4b0f0;
+    --sidebar-hover: #201d30;
+    --score-trend-card: #1c1a27;
+    --lv-total-bg: #15131f;
+  }
+
+  body { background: var(--bg-page); font-family: Arial, sans-serif; color: var(--text-body); transition: background .25s, color .25s; }
+
+  /* ── TOPBAR (fixed) ── */
+  .uou-topbar {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 12px var(--topbar-shadow);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    transition: background .25s, border-color .25s;
+  }
+  .uou-logo-box { width:36px;height:36px;background:#3a2060;border-radius:6px;display:flex;align-items:center;justify-content:center; }
+  .uou-logo-text { font-size: 13px; font-weight: 700; color: #3a2060; line-height: 1.2; }
+
+  /* Notification & Profile */
+  .topbar-actions { margin-left:auto; display:flex; gap:14px; align-items:center; position:relative; }
+
+  .notif-btn, .profile-btn {
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .notif-btn i { font-size: 22px; color: var(--text-muted); }
+  .profile-btn i { font-size: 24px; color: #5a3e8a; }
+
+  /* Dark Mode Toggle */
+  .dark-toggle {
+    background: none; border: 1px solid var(--border-light);
+    border-radius: 20px; cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px; font-size: 12px; color: var(--text-muted);
+    transition: all .2s;
+  }
+  .dark-toggle:hover { background: var(--bg-surface); }
+  .dark-toggle i { font-size: 15px; }
+
+  .notif-badge {
+    position:absolute; top:-4px; right:-4px;
+    background:#E24B4A; color:#fff;
+    font-size:9px; font-weight:700;
+    width:16px; height:16px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    border: 2px solid #fff;
+  }
+
+  /* Profile Dropdown */
+  .profile-dropdown {
+    display:none; position:absolute; top:46px; right:0;
+    background:var(--bg-white); border:1px solid var(--border-light); border-radius:14px;
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+    width:200px; z-index:999; overflow:hidden;
+  }
+  .profile-dropdown.open { display:block; }
+  .profile-top {
+    padding:20px 16px 14px;
+    background:var(--bg-surface);
+    border-bottom:1px solid var(--bg-page);
+    text-align:center;
+  }
+  .profile-name { font-size:14px; font-weight:700; color:var(--text-primary); }
+  .profile-role { font-size:12px; color:var(--text-muted); margin-top:2px; }
+
+  /* ── SIDEBAR ── */
+  .uou-sidebar {
+    width:168px; background:var(--bg-white); border-right:1px solid var(--border-color);
+    position:fixed; top:56px; left:0; bottom:0;
+    padding:8px 0; overflow-y:auto; z-index:100;
+    transition: background .25s, border-color .25s;
+  }
+  .uou-sidebar-item { display:flex; align-items:center; gap:8px; padding:9px 16px; font-size:13px; color:var(--text-body); cursor:pointer; }
+  .uou-sidebar-item:hover { background:var(--sidebar-hover); }
+  .uou-sidebar-item.active { background:var(--sidebar-active-bg); color:var(--sidebar-active-color); font-weight:500; }
+  .uou-sidebar-item i { font-size:17px; color:var(--text-muted); }
+  .uou-sidebar-item.active i { color:var(--sidebar-active-color); }
+
+  /* ── MAIN ── */
+  .uou-main { margin-left:168px; margin-top:56px; padding:16px; }
+
+  .uou-card { background:var(--bg-white); border:1px solid var(--border-light); border-radius:8px; transition: background .25s; }
+  .uou-header-card { padding:14px 20px; margin-bottom:14px; }
+  .uou-brand { text-align:center; border-bottom:1px solid var(--border-light); padding-bottom:10px; margin-bottom:10px; }
+  .uou-brand-title { font-size:17px; font-weight:700; color:var(--text-primary); letter-spacing:0.3px; }
+  .uou-brand-sub { font-size:11px; color:var(--text-muted); }
+
+  .uou-student-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 16px; font-size:12px; color:var(--text-body); margin-bottom:12px; }
+  .uou-student-row span { display:block; }
+
+  .filter-row { display:flex; align-items:center; gap:8px; width:100%; flex-wrap:wrap; }
+  .filter-row select { font-size:12px; padding:6px; border:1px solid var(--border-light); border-radius:4px; background:var(--select-bg); color:var(--select-color); flex:1; min-width:0; transition: background .25s, border-color .25s, color .25s; }
+  .uou-btn { background:#4a90d9; color:#fff; border:none; border-radius:4px; padding:7px 20px; font-size:12px; font-weight:500; cursor:pointer; white-space:nowrap; flex-shrink:0; }
+  .uou-btn:hover { background:#3a7bc8; }
+
+  /* ── VIEW TABS ── */
+  .exam-type-tabs { display:flex; gap:6px; margin-bottom:14px; }
+  .tab-pill {
+    padding:5px 16px; border-radius:20px; font-size:11px; font-weight:600;
+    cursor:pointer; border:1px solid #ddd; background:#fff; color:#666;
+    transition: all .15s;
+  }
+  .tab-pill.active-tab { box-shadow:0 2px 6px rgba(0,0,0,.12); }
+
+  /* ── DASHBOARD VIEW ── */
+  .metric-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+  .rank-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+  .rank-card { background:#fff; border:1px solid #e0dcea; border-radius:8px; padding:14px 16px; display:flex; align-items:center; gap:14px; }
+  .rank-icon-box { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .rank-info { flex:1; min-width:0; }
+  .rank-course { font-size:11px; color:#888; margin:0 0 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rank-vals { display:flex; align-items:baseline; gap:10px; }
+  .rank-num { font-size:22px; font-weight:700; line-height:1; }
+  .rank-sub { font-size:10px; color:#aaa; }
+  .metric-card { background:var(--metric-bg); border:1px solid var(--border-light); border-radius:8px; padding:12px 10px; text-align:center; transition: background .25s; }
+  .metric-label { font-size:11px; color:var(--text-muted); margin:0 0 4px; }
+  .metric-val { font-size:20px; font-weight:600; margin:0; }
+
+  .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .chart-card { background:var(--chart-card-bg); border:1px solid var(--border-light); border-radius:8px; padding:14px; transition: background .25s; }
+  .chart-title { font-size:12px; font-weight:600; color:var(--text-primary); margin:0 0 2px; }
+  .chart-sub { font-size:10px; color:var(--text-faint); margin:0 0 10px; }
+  .legend-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+  .legend-item { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--text-muted); }
+  .legend-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
+
+  /* ── LIST VIEW ── */
+  #list-view { display:none; }
+
+  .lv-section-title { font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:10px; }
+
+  .lv-table-wrap { overflow-x:auto; border-radius:8px; border:1px solid var(--border-light); margin-bottom:18px; }
+  table.lv-table { width:100%; border-collapse:collapse; font-size:12px; background:var(--bg-white); }
+  table.lv-table thead tr { background:var(--table-head-bg); }
+  table.lv-table th {
+    padding:9px 10px; text-align:center; font-size:11px; font-weight:700;
+    color:#5a3e8a; border-bottom:2px solid var(--border-light); white-space:nowrap;
+  }
+  table.lv-table th:first-child { text-align:center; }
+  table.lv-table td { padding:8px 10px; text-align:center; color:var(--text-body); border-bottom:1px solid var(--table-border); white-space:nowrap; }
+  table.lv-table tbody tr:last-child td { border-bottom:none; }
+  table.lv-table tbody tr:hover { background:var(--table-hover); }
+
+  .badge-live { background:#E6F1FB; color:#185FA5; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+  .badge-inbranch { background:#E1F5EE; color:#0F6E56; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+  .badge-practice { background:#FAEEDA; color:#854F0B; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+  .badge-absent { background:#FDEAEA; color:#A32D2D; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+
+  .score-chip { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700; }
+  .score-high { background:#9FE1CB; color:#085041; }
+  .score-mid  { background:#B5D4F4; color:#0C447C; }
+  .score-low  { background:#FAC775; color:#633806; }
+  .score-fail { background:#F5C4B3; color:#712B13; }
+
+  .lv-total-row { text-align:right; font-size:12px; font-weight:700; color:var(--text-primary); padding:10px 16px; border-top:2px solid var(--border-light); background:var(--lv-total-bg); }
+
+  .btn-view-result {
+    background: #6a9e1f; color:#fff; border:none; border-radius:5px;
+    padding:5px 12px; font-size:11px; font-weight:600; cursor:pointer;
+    white-space:nowrap; letter-spacing:0.2px;
+    transition: background .15s;
+  }
+  .btn-view-result:hover { background:#568018; }
+
+  .merit-table-wrap { border-radius:8px; border:1px solid var(--border-light); overflow:hidden; }
+
+  /* rank card */
+  .rank-card { background:var(--rank-card-bg); border:1px solid var(--border-light); border-radius:8px; padding:14px 16px; display:flex; align-items:center; gap:14px; transition: background .25s; }
+  .rank-course { font-size:11px; color:var(--text-muted); margin:0 0 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rank-sub { font-size:10px; color:var(--text-faint); }
+
+  /* Overlay to close dropdowns */
+  #overlay { display:none; position:fixed; inset:0; z-index:150; }
+  #overlay.show { display:block; }
+
+  /* ── HAMBURGER (mobile) ── */
+  .hamburger-btn {
+    display:none; background:none; border:none; cursor:pointer;
+    padding:4px; margin-right:4px;
+  }
+  .hamburger-btn i { font-size:22px; color:#3a2060; }
+
+  /* Sidebar overlay for mobile */
+  #sidebar-overlay {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:90;
+  }
+  #sidebar-overlay.show { display:block; }
+
+  /* ── FOOTER ── */
+  .uou-footer {
+    margin-left:168px;
+    background:#532355;
+    color:#e0d8f0;
+    padding:40px 32px 0;
+    transition: margin-left .25s;
+  }
+  .uou-footer a { color:#c8b8e8; text-decoration:none; font-size:13px; }
+  .uou-footer a:hover { color:#fff; text-decoration:underline; }
+  .footer-grid {
+    display:grid;
+    grid-template-columns:1.4fr 1fr 0.8fr 1.4fr;
+    gap:32px;
+    padding-bottom:32px;
+    border-bottom:1px solid rgba(255,255,255,.15);
+  }
+  .footer-brand-title { font-size:18px; font-weight:700; color:#fff; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .footer-brand-sub { font-size:12px; color:#c8b8e8; line-height:1.6; margin-top:8px; }
+  .footer-col-title { font-size:13px; font-weight:700; color:#fff; margin-bottom:14px; letter-spacing:0.3px; }
+  .footer-links { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .footer-contact-item { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:#c8b8e8; line-height:1.5; margin-bottom:10px; }
+  .footer-contact-item i { font-size:16px; color:#c8b8e8; flex-shrink:0; margin-top:1px; }
+  .footer-social { display:flex; gap:10px; margin-top:16px; }
+  .footer-social a {
+    width:36px; height:36px; border-radius:50%;
+    border:1px solid rgba(255,255,255,.3);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:16px;
+    transition: background .2s, border-color .2s;
+  }
+  .footer-social a:hover { background:rgba(255,255,255,.15); border-color:#fff; }
+  .footer-bottom {
+    text-align:center; font-size:11px; color:rgba(255,255,255,.45);
+    padding:14px 0;
+  }
+
+  /* ── RESPONSIVE BREAKPOINTS ── */
+
+  /* ≤ 1100px: sidebar collapses to icon-only */
+  @media (max-width: 1100px) {
+    .uou-sidebar { width:52px; }
+    .uou-sidebar-item span { display:none; }
+    .uou-sidebar-item { justify-content:center; padding:10px 0; gap:0; }
+    .uou-main { margin-left:52px; }
+    .uou-footer { margin-left:52px; }
+    .metric-grid { grid-template-columns: repeat(3, 1fr); }
+    .rank-grid { grid-template-columns: repeat(2, 1fr); }
+    .subj-donut-row { grid-template-columns: 1fr !important; }
+  }
+
+  /* ≤ 900px: filter row wraps, chart grid stacks */
+  @media (max-width: 900px) {
+    .filter-row { flex-wrap:wrap; }
+    .filter-row select { flex: 1 1 calc(50% - 8px); min-width:120px; }
+    .uou-btn { width:100%; }
+    .chart-grid { grid-template-columns: 1fr; }
+    #subj-donut-grid { grid-template-columns: 1fr !important; }
+    .subj-donut-row { grid-template-columns: 1fr !important; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .rank-grid { grid-template-columns: repeat(2, 1fr); }
+    .uou-student-row { grid-template-columns: 1fr; }
+    .uou-student-row span[style] { text-align:left !important; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ≤ 768px: sidebar becomes slide-in drawer */
+  @media (max-width: 768px) {
+    .hamburger-btn { display:flex; }
+    .uou-sidebar {
+      width:200px;
+      transform: translateX(-100%);
+      transition: transform .25s ease;
+      z-index:100;
+    }
+    .uou-sidebar.open {
+      transform: translateX(0);
+    }
+    .uou-sidebar-item { justify-content:flex-start; padding:10px 16px; gap:8px; }
+    .uou-sidebar-item span { display:inline !important; }
+    .uou-main { margin-left:0; }
+    .uou-footer { margin-left:0; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .notif-dropdown { right:-10px; width:280px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .dark-toggle span { display:none; }
+  }
+
+  /* ≤ 540px: single column everything */
+  @media (max-width: 540px) {
+    .uou-main { padding:10px; }
+    .uou-header-card { padding:12px; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); gap:8px; }
+    .rank-grid { grid-template-columns: 1fr; }
+    .metric-val { font-size:17px; }
+    .filter-row select { flex: 1 1 100%; }
+    .uou-btn { width:100%; }
+    .exam-type-tabs { gap:4px; }
+    .tab-pill { font-size:10px; padding:5px 10px; }
+    .notif-dropdown { width:calc(100vw - 24px); right:-60px; }
+    .profile-dropdown { width:200px; }
+    .uou-brand-title { font-size:14px; }
+    .uou-brand-sub { font-size:10px; }
+    .lv-section-title { font-size:12px; }
+    .footer-grid { grid-template-columns: 1fr; gap:20px; }
+    .uou-footer { padding:28px 18px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="overlay" onclick="closeAllDropdowns()"></div>
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ══ TOPBAR ══ -->
+<div class="uou-topbar">
+  <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">
+    <i class="ti ti-menu-2"></i>
+  </button>
+  <div class="uou-logo-box">
+    <i class="ti ti-flame" style="color:#fff;font-size:18px;"></i>
+  </div>
+  <div class="uou-logo-text">Udvash-Unmesh</div>
+
+  <div class="topbar-actions">
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-toggle" onclick="toggleDarkMode()" id="darkToggleBtn" aria-label="Toggle dark mode">
+      <i class="ti ti-moon" id="darkToggleIcon"></i>
+      <span id="darkToggleLabel">Dark</span>
+    </button>
+
+    <!-- Notification Button (no dropdown, just clickable) -->
+    <button class="notif-btn" aria-label="Notifications">
+      <i class="ti ti-bell"></i>
+      <span class="notif-badge">3</span>
+    </button>
+
+    <!-- Profile Button -->
+    <button class="profile-btn" onclick="toggleProfile(event)" aria-label="Profile">
+      <i class="ti ti-user-circle"></i>
+    </button>
+
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown" id="profileDropdown">
+      <!-- Avatar -->
+      <div class="profile-top">
+        <div style="width:72px;height:72px;border-radius:50%;background:#e8e4f0;border:2px solid #d0c8e8;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+          <i class="ti ti-user" style="font-size:36px;color:#5a3e8a;"></i>
+        </div>
+        <div class="profile-name" style="text-align:center;">Al Amin</div>
+        <div class="profile-role" style="text-align:center;font-size:12px;color:#888;margin-top:2px;">Reg. No. 1997219</div>
+        <div class="profile-role" style="text-align:center;font-size:12px;color:#888;margin-top:2px;">Roll. No. 65228400070</div>
+      </div>
+      <!-- Action icons row -->
+      <div style="display:flex;justify-content:center;gap:16px;padding:14px 16px;border-top:1px solid #f0eef5;">
+        <button style="width:40px;height:40px;border-radius:50%;border:1px solid #e0dcea;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Edit Profile">
+          <i class="ti ti-pencil" style="font-size:16px;color:#5a3e8a;"></i>
+        </button>
+        <button style="width:40px;height:40px;border-radius:50%;border:1px solid #e0dcea;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="View Profile">
+          <i class="ti ti-eye" style="font-size:16px;color:#5a3e8a;"></i>
+        </button>
+        <button style="width:40px;height:40px;border-radius:50%;border:1px solid #e0dcea;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Logout">
+          <i class="ti ti-power" style="font-size:16px;color:#E24B4A;"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SIDEBAR ══ -->
+<div class="uou-sidebar" id="mainSidebar">
+  <div class="uou-sidebar-item"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-circle-plus"></i><span>Add Course</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-book"></i><span>Course & Content</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-school"></i><span>Master Class</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-building"></i><span>Foundation Class</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-history"></i><span>Past Classes</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-file-text"></i><span>Past Exams</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-pencil"></i><span>Practice Exam</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-clipboard-list"></i><span>Solve Sheet</span></div>
+  <div class="uou-sidebar-item active"><i class="ti ti-chart-bar"></i><span>Performance</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-help-circle"></i><span>Q&A Service</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-credit-card"></i><span>Due Payment</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-messages"></i><span>Discussion Group</span></div>
+  <div class="uou-sidebar-item"><i class="ti ti-users"></i><span>Community</span></div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="uou-main">
+
+  <!-- Header Card -->
+  <div class="uou-card uou-header-card">
+    <div class="uou-brand">
+      <div class="uou-brand-title">UDVASH-UNMESH</div>
+      <div class="uou-brand-sub">HSC Model Test 2026</div>
+      <div class="uou-brand-sub">Student's Exam Performance Report</div>
+    </div>
+    <div class="uou-student-row">
+      <span><strong>Student's Name:</strong> Al Amin</span>
+      <span style="text-align:right;"><strong>Institute:</strong> Dhaka City College</span>
+      <span><strong>Reg. &amp; Roll No.:</strong> 1997219 (65228400070)</span>
+      <span style="text-align:right;"><strong>Branch:</strong> Farmgate Udvash-Unmesh</span>
+    </div>
+    <div class="filter-row">
+      <select id="f-course"><option value="">All Course</option><option value="HSC Model Test 2026">HSC Model Test 2026</option><option value="HSC Final Model Test 2026">HSC Final Model Test 2026</option></select>
+      <select id="f-subject"><option value="">All Subject</option><option value="Physics">Physics</option><option value="Chemistry">Chemistry</option><option value="Math">Math</option><option value="Biology">Biology</option><option value="ICT">ICT</option><option value="Bangla">Bangla</option><option value="English">English</option></select>
+      <select id="f-examtype"><option value="">All Exam Type</option><option value="Daily Exam">Daily Exam</option><option value="Weekly Exam">Weekly Exam</option><option value="Monthly Exam">Monthly Exam</option><option value="Paper Final Exam">Paper Final Exam</option><option value="Subject Final Exam">Subject Final Exam</option></select>
+      <select id="f-platform"><option value="">All Platform</option><option value="Live">Live Exam</option><option value="InBranch">InBranch Exam</option><option value="Practice">Practice Exam</option></select>
+      <select id="f-mark"><option value="">All Mark</option><option value="10">10</option><option value="20">20</option><option value="25">25</option><option value="30">30</option><option value="40">40</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="400">400</option></select>
+      <select id="f-presence"><option value="">All Exam</option><option value="present">Present Only</option><option value="absent">Absent Only</option></select>
+      <button class="uou-btn" onclick="applyFilters()">View</button>
+    </div>
+  </div>
+
+  <!-- View Toggle Tabs -->
+  <div class="exam-type-tabs">
+    <div class="tab-pill active-tab" id="tab-list"
+         style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;"
+         onclick="switchView('list')">
+      <i class="ti ti-list" style="font-size:12px;"></i> List View
+    </div>
+    <div class="tab-pill" id="tab-dashboard"
+         style="background:#fff;color:#666;border-color:#ddd;"
+         onclick="switchView('dashboard')">
+      <i class="ti ti-layout-dashboard" style="font-size:12px;"></i> Dashboard View
+    </div>
+  </div>
+
+  <!-- ══ LIST VIEW ══ -->
+  <div id="list-view">
+
+    <p class="lv-section-title" id="sec-title-1">HSC Model Test 2026</p>
+    <div class="lv-table-wrap" id="sec-wrap-1">
+      <table class="lv-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th style="text-align:left;">Exam Name</th>
+            <th>Exam Type</th>
+            <th>Platform</th>
+            <th>MCQ Marks</th>
+            <th>Written Marks</th>
+            <th>Deduction</th>
+            <th>Total Marks</th>
+            <th>Highest Marks</th>
+            <th>Branch Merit</th>
+            <th>Central Merit</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="exam-tbody"></tbody>
+        <tr>
+          <td colspan="13"  style="text-align: right;" class="lv-total-row">Total Marks Obtained: <span id="lv-total">0</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <p class="lv-section-title" id="sec-title-2">HSC Final Model Test 2026</p>
+    <div class="lv-table-wrap" id="sec-wrap-2">
+      <table class="lv-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th style="text-align:left;">Exam Name</th>
+            <th>Exam Type</th>
+            <th>Platform</th>
+            <th>MCQ Marks</th>
+            <th>Written Marks</th>
+            <th>Deduction</th>
+            <th>Total Marks</th>
+            <th>Highest Marks</th>
+            <th>Branch Merit</th>
+            <th>Central Merit</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="exam-tbody-final"></tbody>
+        <tr>
+          <td colspan="13" style="text-align: right;" class="lv-total-row">Total Marks Obtained: <span id="lv-total-final">0</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <p class="lv-section-title">Course Merit Calculation</p>
+    <div class="merit-table-wrap">
+      <table class="lv-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="text-align:left;">Course Name</th>
+            <th>Total MCQ Marks</th>
+            <th>Total Written Marks</th>
+            <th>Total Obtained Marks</th>
+            <th>Total Deduction</th>
+            <th>Highest Marks</th>
+            <th>Course Branch Merit</th>
+            <th>Course Central Merit</th>
+          </tr>
+        </thead>
+        <tbody id="merit-tbody"></tbody>
+      </table>
+    </div>
+
+  </div><!-- /list-view -->
+
+  <!-- ══ DASHBOARD VIEW ══ -->
+  <div id="dashboard-view" style="display:none;">
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <p class="metric-label">Total Exams</p>
+        <p class="metric-val" style="color:#3a2060;" id="dash-total-exams">86</p>
+        <p style="font-size:10px;color:#aaa;margin:4px 0 0;" id="dash-total-sub">Live 35 · InBranch 26 · Practice 25</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Exams Attended</p>
+        <p class="metric-val" style="color:#5a3e8a;" id="dash-attended">74</p>
+        <p style="font-size:10px;color:#aaa;margin:4px 0 0;" id="dash-attended-sub">Live 30 · InBranch 22 · Practice 22</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Exams Missed</p>
+        <p class="metric-val" style="color:#A32D2D;" id="dash-missed">12</p>
+        <p style="font-size:10px;color:#E24B4A;margin:4px 0 0;" id="dash-missed-sub">Live 5 · InBranch 4 · Practice 3</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Average Score</p>
+        <p class="metric-val" style="color:#4a90d9;" id="dash-avg">87.4%</p>
+        <p style="font-size:10px;color:#1D9E75;margin:4px 0 0;">↑ 3.2% vs last month</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Highest Score</p>
+        <p class="metric-val" style="color:#1D9E75;" id="dash-high">98%</p>
+        <p style="font-size:10px;color:#aaa;margin:4px 0 0;" id="dash-high-sub">ICT · Live Exam · 100 marks</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Lowest Score</p>
+        <p class="metric-val" style="color:#BA7517;" id="dash-low">62%</p>
+        <p style="font-size:10px;color:#aaa;margin:4px 0 0;" id="dash-low-sub">English · InBranch · 50 marks</p>
+      </div>
+    </div>
+
+    <!-- Course Rank Cards -->
+    <div class="rank-grid">
+      <div class="rank-card">
+        <div class="rank-icon-box" style="background:#EDE9F8;">
+          <i class="ti ti-trophy" style="font-size:22px;color:#5a3e8a;"></i>
+        </div>
+        <div class="rank-info">
+          <p class="rank-course">HSC Model Test 2026</p>
+          <div class="rank-vals">
+            <span>
+              <span style="font-size:10px;color:#888;display:block;margin-bottom:2px;">Branch Merit</span>
+              <span class="rank-num" style="color:#5a3e8a;">#12</span>
+            </span>
+            <span style="width:1px;height:32px;background:#e0dcea;display:inline-block;align-self:center;"></span>
+            <span>
+              <span style="font-size:10px;color:#888;display:block;margin-bottom:2px;">Central Merit</span>
+              <span class="rank-num" style="color:#4a90d9;">#38</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="rank-card">
+        <div class="rank-icon-box" style="background:#E1F5EE;">
+          <i class="ti ti-medal" style="font-size:22px;color:#0F6E56;"></i>
+        </div>
+        <div class="rank-info">
+          <p class="rank-course">HSC Final Model Test 2026</p>
+          <div class="rank-vals">
+            <span>
+              <span style="font-size:10px;color:#888;display:block;margin-bottom:2px;">Branch Merit</span>
+              <span class="rank-num" style="color:#0F6E56;">#8</span>
+            </span>
+            <span style="width:1px;height:32px;background:#e0dcea;display:inline-block;align-self:center;"></span>
+            <span>
+              <span style="font-size:10px;color:#888;display:block;margin-bottom:2px;">Central Merit</span>
+              <span class="rank-num" style="color:#1D9E75;">#29</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subj-donut-row" style="display:grid;grid-template-columns:3fr 1fr;gap:14px;margin-bottom:14px;">
+      <!-- Subject-wise bar chart -->
+      <div class="chart-card" style="padding:14px;min-width:0;">
+        <p class="chart-title">Subject-wise Average Score</p>
+        <p class="chart-sub">Average % across all exam types</p>
+        <div class="legend-row">
+          <span class="legend-item"><span class="legend-dot" style="background:#4a90d9;"></span>Live</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#1D9E75;"></span>InBranch</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#BA7517;"></span>Practice</span>
+        </div>
+        <div style="position:relative;height:195px;">
+          <canvas id="c1" role="img" aria-label="Subject-wise scores grouped bar chart"></canvas>
+        </div>
+      </div>
+      <!-- Exam Type Distribution doughnut -->
+      <div class="chart-card" style="padding:14px;display:flex;flex-direction:column;align-items:center;">
+        <p class="chart-title" style="align-self:flex-start;">Exam Type Distribution</p>
+        <p class="chart-sub" style="align-self:flex-start;">Present vs Absent</p>
+        <div style="position:relative;width:150px;height:150px;flex-shrink:0;">
+          <canvas id="c2" width="150" height="150" role="img" aria-label="Doughnut chart exam distribution"></canvas>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:14px;align-self:flex-start;width:100%;">
+          <span class="legend-item"><span style="width:10px;height:10px;border-radius:50%;background:#4a90d9;display:inline-block;flex-shrink:0;"></span><span style="font-size:11px;color:#444;flex:1;">Live</span><strong style="font-size:11px;color:#4a90d9;">30</strong></span>
+          <span class="legend-item"><span style="width:10px;height:10px;border-radius:50%;background:#1D9E75;display:inline-block;flex-shrink:0;"></span><span style="font-size:11px;color:#444;flex:1;">InBranch</span><strong style="font-size:11px;color:#1D9E75;">22</strong></span>
+          <span class="legend-item"><span style="width:10px;height:10px;border-radius:50%;background:#BA7517;display:inline-block;flex-shrink:0;"></span><span style="font-size:11px;color:#444;flex:1;">Practice</span><strong style="font-size:11px;color:#BA7517;">22</strong></span>
+          <span class="legend-item"><span style="width:10px;height:10px;border-radius:50%;background:#E24B4A;display:inline-block;flex-shrink:0;"></span><span style="font-size:11px;color:#444;flex:1;">Absent</span><strong style="font-size:11px;color:#E24B4A;">12</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="uou-card" style="padding:14px;margin-bottom:14px;">
+      <p class="chart-title" style="margin:0 0 2px;">Score Trend — Progress Over Time</p>
+      <p class="chart-sub" style="margin:0 0 8px;">% score per exam over months</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+        <div class="legend-row" style="margin:0;">
+          <span class="legend-item"><span style="width:16px;height:2px;background:#4a90d9;display:inline-block;"></span>Live</span>
+          <span class="legend-item"><span style="width:16px;height:2px;background:#1D9E75;display:inline-block;"></span>InBranch</span>
+          <span class="legend-item"><span style="width:16px;height:2px;background:#BA7517;display:inline-block;"></span>Practice</span>
+          <span class="legend-item"><span style="width:16px;height:2px;background:#aaa;border-top:2px dashed #aaa;display:inline-block;"></span>Average</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <span style="font-size:10px;padding:3px 8px;background:#E6F1FB;color:#185FA5;border-radius:10px;border:1px solid #B5D4F4;">80% Target</span>
+          <span style="font-size:10px;padding:3px 8px;background:#E1F5EE;color:#0F6E56;border-radius:10px;border:1px solid #9FE1CB;">90% Target</span>
+        </div>
+      </div>
+      <div style="position:relative;height:190px;">
+        <canvas id="c3" role="img" aria-label="Line chart score trends"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:14px;padding:14px;">
+      <p class="chart-title">Performance by Mark Slab</p>
+      <p class="chart-sub">Average % for exams from 10 to 400 marks</p>
+      <div class="legend-row">
+        <span class="legend-item"><span class="legend-dot" style="background:#7F77DD;"></span>Live</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1D9E75;"></span>InBranch</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#BA7517;"></span>Practice</span>
+      </div>
+      <div style="position:relative;height:180px;">
+        <canvas id="c4" role="img" aria-label="Bar chart performance by mark slab"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:14px;padding:14px;">
+      <p class="chart-title">Performance by Exam Type</p>
+      <p class="chart-sub">Average % score per exam type across all platforms</p>
+      <div class="legend-row">
+        <span class="legend-item"><span class="legend-dot" style="background:#3C3489;"></span>Daily Exam</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#0F6E56;"></span>Weekly Exam</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#854F0B;"></span>Monthly Exam</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#A32D2D;"></span>Paper Final</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#185FA5;"></span>Subject Final</span>
+      </div>
+      <div style="position:relative;height:200px;">
+        <canvas id="c5" role="img" aria-label="Bar chart performance by exam type">Average scores by exam type</canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:14px;padding:14px;">
+      <p class="chart-title">Subject × Exam Type — Heatmap</p>
+      <p class="chart-sub">Average % score comparison</p>
+      <div id="hm" style="margin-top:6px;overflow-x:auto;"></div>
+    </div>
+
+  </div><!-- /dashboard-view -->
+
+</div><!-- /uou-main -->
+
+<!-- ══ FOOTER ══ -->
+<footer class="uou-footer">
+  <div class="footer-grid">
+    <!-- Brand -->
+    <div>
+      <div class="footer-brand-title">
+        <div style="width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:6px;display:flex;align-items:center;justify-content:center;">
+          <i class="ti ti-flame" style="color:#fff;font-size:16px;"></i>
+        </div>
+        Udvash-Unmesh
+      </div>
+      <div style="font-size:22px;font-weight:700;color:rgba(255,255,255,.9);margin:4px 0 0;font-family:serif;">সম্পর্ক হোক সহযোগিতার....</div>
+      <p class="footer-brand-sub">Udvash-Unmesh Online Care — HSC ও Admission প্রস্তুতির বিশ্বস্ত সঙ্গী।</p>
+      <div class="footer-social">
+        <a href="#" aria-label="YouTube"><i class="ti ti-brand-youtube"></i></a>
+        <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
+      </div>
+    </div>
+
+    <!-- Help -->
+    <div>
+      <p class="footer-col-title">Help</p>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms &amp; Conditions</a></li>
+        <li><a href="#">FAQs</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Explore -->
+    <div>
+      <p class="footer-col-title">Explore</p>
+      <ul class="footer-links">
+        <li><a href="#">Udvash</a></li>
+        <li><a href="#">Unmesh</a></li>
+      </ul>
+    </div>
+
+    <!-- Get in Touch -->
+    <div>
+      <p class="footer-col-title">Get in Touch</p>
+      <div class="footer-contact-item">
+        <i class="ti ti-map-pin"></i>
+        <span>Hossain Tower (5th Floor), 75, Green Road, Farmgate; Sher-e-Bangla Nagar PS; Dhaka-1205.</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="ti ti-phone"></i>
+        <span>09666775566</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="ti ti-mail"></i>
+        <span>info@udvash-unmesh.com</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    Copyright &copy; Udvash-Unmesh Online Care. All rights reserved. 2026 &nbsp;|&nbsp; P-1 &nbsp;|&nbsp; V-line-udvash-portal-b8d6d656-hd65w.217.2
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ── Sidebar mobile toggle ── */
+function toggleSidebar() {
+  const sb = document.getElementById('mainSidebar');
+  const so = document.getElementById('sidebar-overlay');
+  sb.classList.toggle('open');
+  so.classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('mainSidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+/* ── Dropdown logic ── */
+function toggleProfile(e) {
+  e.stopPropagation();
+  const pd = document.getElementById('profileDropdown');
+  const ov = document.getElementById('overlay');
+  const isOpen = pd.classList.contains('open');
+  pd.classList.toggle('open', !isOpen);
+  ov.classList.toggle('show', !isOpen);
+}
+function closeAllDropdowns() {
+  document.getElementById('profileDropdown').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+/* ── View toggle ── */
+function switchView(view) {
+  const listView = document.getElementById('list-view');
+  const dashView  = document.getElementById('dashboard-view');
+  const tabList   = document.getElementById('tab-list');
+  const tabDash   = document.getElementById('tab-dashboard');
+
+  if (view === 'list') {
+    listView.style.display = 'block';
+    dashView.style.display  = 'none';
+    tabList.style.cssText += 'background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;';
+    tabList.classList.add('active-tab');
+    tabDash.style.background = '#fff';
+    tabDash.style.color = '#666';
+    tabDash.style.borderColor = '#ddd';
+    tabDash.classList.remove('active-tab');
+  } else {
+    listView.style.display = 'none';
+    dashView.style.display  = 'block';
+    tabDash.style.cssText += 'background:#FAEEDA;color:#854F0B;border-color:#FAC775;';
+    tabDash.classList.add('active-tab');
+    tabList.style.background = '#fff';
+    tabList.style.color = '#666';
+    tabList.style.borderColor = '#ddd';
+    tabList.classList.remove('active-tab');
+    initCharts();
+  }
+}
+
+/* ── List View Data ── */
+const examData = [
+  {date:'09, Mar 2025', name:'[101] Physics Live Exam-01', platform:'Live',     subject:'Physics',   examType:'Daily Exam',   mcq:18, written:'N/A', ded:0, total:18, max:20, bMerit:'12', cMerit:'45'},
+  {date:'09, Mar 2025', name:'[102] Chemistry Live Exam-02', platform:'Live',   subject:'Chemistry', examType:'Daily Exam',   mcq:16, written:'N/A', ded:0, total:16, max:20, bMerit:'18', cMerit:'62'},
+  {date:'12, Mar 2025', name:'[103] Math InBranch Exam-01',         platform:'InBranch', subject:'Math',      examType:'Weekly Exam',  mcq:14, written:8,    ded:1, total:21, max:30, bMerit:'9',  cMerit:'38'},
+  {date:'15, Mar 2025', name:'[104] Biology Practice Exam-01',      platform:'Practice', subject:'Biology',   examType:'Daily Exam',   mcq:19, written:'N/A', ded:0, total:19, max:20, bMerit:'-', cMerit:'-'},
+  {date:'18, Mar 2025', name:'[105] ICT Live Exam-03', platform:'Live',         subject:'ICT',       examType:'Weekly Exam',  mcq:17, written:'N/A', ded:0, total:17, max:20, bMerit:'14', cMerit:'50'},
+  {date:'20, Mar 2025', name:'[106] Bangla InBranch Exam-02',       platform:'InBranch', subject:'Bangla',    examType:'Monthly Exam', mcq:13, written:10,   ded:2, total:21, max:30, bMerit:'11', cMerit:'42'},
+  {date:'22, Mar 2025', name:'[107] English Live Exam-04', platform:'Live',     subject:'English',   examType:'Daily Exam',   mcq:'A', written:'N/A', ded:0, total:0, max:20, bMerit:'-', cMerit:'-'},
+  {date:'25, Mar 2025', name:'[108] Physics Practice Exam-02',      platform:'Practice', subject:'Physics',   examType:'Weekly Exam',  mcq:20, written:'N/A', ded:0, total:20, max:20, bMerit:'-', cMerit:'-'},
+  {date:'28, Mar 2025', name:'[109] Math Live Exam-05', platform:'Live',        subject:'Math',      examType:'Subject Final Exam', mcq:15, written:'N/A', ded:0, total:15, max:20, bMerit:'20', cMerit:'70'},
+  {date:'01, Apr 2025', name:'[110] Chemistry InBranch Exam-03',    platform:'InBranch', subject:'Chemistry', examType:'Paper Final Exam', mcq:'A', written:'A', ded:0, total:0,  max:30, bMerit:'-', cMerit:'-'},
+];
+
+const finalExamData = [
+  {date:'05, May 2025', name:'[101] Physics Live Exam-01',     platform:'Live',     subject:'Physics',   examType:'Daily Exam',        mcq:22, written:'N/A', ded:0, total:22, max:25, bMerit:'8',  cMerit:'30'},
+  {date:'08, May 2025', name:'[102] Math InBranch Exam-01',    platform:'InBranch', subject:'Math',      examType:'Weekly Exam',       mcq:18, written:12,   ded:1, total:29, max:40, bMerit:'6',  cMerit:'25'},
+  {date:'11, May 2025', name:'[103] Biology Practice Exam-01', platform:'Practice', subject:'Biology',   examType:'Daily Exam',        mcq:24, written:'N/A', ded:0, total:24, max:25, bMerit:'-', cMerit:'-'},
+  {date:'14, May 2025', name:'[104] Chemistry Live Exam-02',   platform:'Live',     subject:'Chemistry', examType:'Weekly Exam',       mcq:20, written:'N/A', ded:0, total:20, max:25, bMerit:'11', cMerit:'37'},
+  {date:'17, May 2025', name:'[105] ICT InBranch Exam-02',     platform:'InBranch', subject:'ICT',       examType:'Monthly Exam',      mcq:16, written:14,   ded:1, total:29, max:40, bMerit:'9',  cMerit:'34'},
+  {date:'20, May 2025', name:'[106] Bangla Live Exam-03',      platform:'Live',     subject:'Bangla',    examType:'Monthly Exam',      mcq:'A', written:'N/A', ded:0, total:0, max:25, bMerit:'-', cMerit:'-'},
+  {date:'23, May 2025', name:'[107] English Practice Exam-02', platform:'Practice', subject:'English',   examType:'Subject Final Exam',mcq:25, written:'N/A', ded:0, total:25, max:25, bMerit:'-', cMerit:'-'},
+  {date:'26, May 2025', name:'[108] Math InBranch Exam-03',    platform:'InBranch', subject:'Math',      examType:'Paper Final Exam',  mcq:19, written:13,   ded:0, total:32, max:40, bMerit:'5',  cMerit:'22'},
+  {date:'29, May 2025', name:'[109] Physics Live Exam-04',     platform:'Live',     subject:'Physics',   examType:'Subject Final Exam',mcq:23, written:'N/A', ded:0, total:23, max:25, bMerit:'7',  cMerit:'27'},
+  {date:'01, Jun 2025', name:'[110] Chemistry Live Exam-05',   platform:'Live',     subject:'Chemistry', examType:'Paper Final Exam',  mcq:21, written:'N/A', ded:0, total:21, max:25, bMerit:'10', cMerit:'35'},
+];
+
+const meritData = [
+  {name:'HSC Model Test 2026',       tmcq:152, twritten:18, tobtained:147, tded:3, highest:190, bMerit:'12', cMerit:'38'},
+  {name:'HSC Final Model Test 2026', tmcq:210, twritten:30, tobtained:228, tded:2, highest:280, bMerit:'8',  cMerit:'29'},
+];
+
+/* ── Filter helpers ── */
+function getFilters() {
+  return {
+    course:   document.getElementById('f-course').value,
+    subject:  document.getElementById('f-subject').value,
+    examType: document.getElementById('f-examtype').value,
+    platform: document.getElementById('f-platform').value,
+    mark:     document.getElementById('f-mark').value,
+    presence: document.getElementById('f-presence').value,
+  };
+}
+
+function matchRow(r, f) {
+  const isAbsent = r.mcq === 'A';
+  if (f.platform && r.platform !== f.platform) return false;
+  if (f.subject  && r.subject  !== f.subject)  return false;
+  if (f.examType && r.examType !== f.examType) return false;
+  if (f.mark     && String(r.max) !== f.mark)  return false;
+  if (f.presence === 'present' && isAbsent)    return false;
+  if (f.presence === 'absent'  && !isAbsent)   return false;
+  return true;
+}
+
+/* ── Row renderer ── */
+function renderRows(data, f) {
+  let obtained = 0, maxTotal = 0, idx = 0;
+  const isDark = document.body.classList.contains('dark');
+  const html = data.filter(r => matchRow(r, f)).map(r => {
+    idx++;
+    const isAbsent = r.mcq === 'A';
+    obtained  += isAbsent ? 0 : r.total;
+    maxTotal  += r.max;
+    const rowStyle = isAbsent ? (isDark ? 'background:#1f0f0f;' : 'background:#fff8f8;') : '';
+    return `<tr style="${rowStyle}">
+      <td>${idx}</td>
+      <td>${r.date}</td>
+      <td style="text-align:left;">${r.name}</td>
+      <td>${examTypeBadge(r.examType)}</td>
+      <td>${platformBadge(r.platform)}</td>
+      <td>${isAbsent ? '<span class="badge-absent">A</span>' : r.mcq}</td>
+      <td>${r.written==='N/A' ? '<span style="color:#ccc;">N/A</span>' : isAbsent ? '<span class="badge-absent">A</span>' : r.written}</td>
+      <td>${r.ded}</td>
+      <td>${isAbsent ? '0 / '+r.max : scoreChip(r.total, r.max)}</td>
+      <td>- / ${r.max}</td>
+      <td>${r.bMerit}</td>
+      <td>${r.cMerit}</td>
+      <td>${isAbsent ? '' : '<button class="btn-view-result">View Result</button>'}</td>
+    </tr>`;
+  }).join('');
+  return {html, obtained, maxTotal, count: idx};
+}
+
+/* ── Badge & chip helpers ── */
+function examTypeBadge(t) {
+  const map = {
+    'Daily Exam':        'background:#EDE9F8;color:#3C3489;',
+    'Weekly Exam':       'background:#E1F5EE;color:#0F6E56;',
+    'Monthly Exam':      'background:#FAEEDA;color:#854F0B;',
+    'Paper Final Exam':  'background:#FCEBEB;color:#A32D2D;',
+    'Subject Final Exam':'background:#E6F1FB;color:#185FA5;',
+  };
+  const s = map[t] || 'background:#f0eef5;color:#5a3e8a;';
+  return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap;${s}">${t||'-'}</span>`;
+}
+function platformBadge(p) {
+  if(p==='Live')     return '<span class="badge-live">Live</span>';
+  if(p==='InBranch') return '<span class="badge-inbranch">InBranch</span>';
+  if(p==='Practice') return '<span class="badge-practice">Practice</span>';
+  return '';
+}
+function scoreChip(v, max) {
+  const pct = (v/max)*100;
+  const cls = pct>=90?'score-high':pct>=80?'score-mid':pct>=70?'score-low':'score-fail';
+  return `<span class="score-chip ${cls}">${v}/${max}</span>`;
+}
+
+/* ── Build List View with filters ── */
+function buildListView(f) {
+  f = f || {course:'', subject:'', examType:'', platform:'', mark:'', presence:''};
+
+  /* Section 1: HSC Model Test 2026 */
+  const show1 = !f.course || f.course === 'HSC Model Test 2026';
+  document.getElementById('sec-title-1').style.display = show1 ? '' : 'none';
+  document.getElementById('sec-wrap-1').style.display  = show1 ? '' : 'none';
+  if (show1) {
+    const r1 = renderRows(examData, f);
+    document.getElementById('exam-tbody').innerHTML = r1.html ||
+      `<tr><td colspan="13" style="text-align:center;color:#aaa;padding:20px;">No results</td></tr>`;
+    document.getElementById('lv-total').textContent = r1.obtained + ' / ' + r1.maxTotal;
+  }
+
+  /* Section 2: HSC Final Model Test 2026 */
+  const show2 = !f.course || f.course === 'HSC Final Model Test 2026';
+  document.getElementById('sec-title-2').style.display = show2 ? '' : 'none';
+  document.getElementById('sec-wrap-2').style.display  = show2 ? '' : 'none';
+  if (show2) {
+    const r2 = renderRows(finalExamData, f);
+    document.getElementById('exam-tbody-final').innerHTML = r2.html ||
+      `<tr><td colspan="13" style="text-align:center;color:#aaa;padding:20px;">No results</td></tr>`;
+    document.getElementById('lv-total-final').textContent = r2.obtained + ' / ' + r2.maxTotal;
+  }
+
+  /* Merit table: filter by course */
+  const mtbody = document.getElementById('merit-tbody');
+  const filteredMerit = meritData.filter(r => !f.course || r.name === f.course);
+  mtbody.innerHTML = filteredMerit.map((r,i) => `<tr>
+    <td>${i+1}</td>
+    <td style="text-align:left;">${r.name}</td>
+    <td>${r.tmcq}</td>
+    <td>${r.twritten}</td>
+    <td><strong>${r.tobtained}</strong></td>
+    <td>${r.tded}</td>
+    <td>${r.highest}</td>
+    <td><span class="badge-live">${r.bMerit}</span></td>
+    <td><span class="badge-inbranch">${r.cMerit}</span></td>
+  </tr>`).join('');
+}
+
+/* ── Update Dashboard metrics based on filters ── */
+function updateDashboardMetrics(f) {
+  /* Determine which datasets to include */
+  let combined = [];
+  if (!f.course || f.course === 'HSC Model Test 2026')       combined = combined.concat(examData);
+  if (!f.course || f.course === 'HSC Final Model Test 2026') combined = combined.concat(finalExamData);
+
+  /* Apply non-course filters */
+  const subF = {...f, course: ''};
+  const filtered = combined.filter(r => matchRow(r, subF));
+
+  const attended = filtered.filter(r => r.mcq !== 'A');
+  const absent   = filtered.filter(r => r.mcq === 'A');
+  const total    = filtered.length;
+
+  const scores = attended.map(r => r.total / r.max * 100);
+  const avg    = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+  const high   = scores.length ? Math.max(...scores) : 0;
+  const low    = scores.length ? Math.min(...scores) : 0;
+
+  /* Platform breakdown */
+  const pCount = (arr, p) => arr.filter(r=>r.platform===p).length;
+  const totalLive = pCount(filtered,'Live'), totalIB = pCount(filtered,'InBranch'), totalPr = pCount(filtered,'Practice');
+  const attLive   = pCount(attended,'Live'), attIB   = pCount(attended,'InBranch'), attPr   = pCount(attended,'Practice');
+  const absLive   = pCount(absent,'Live'),   absIB   = pCount(absent,'InBranch'),   absPr   = pCount(absent,'Practice');
+
+  /* Best exam info */
+  let highRow = attended.length ? attended.reduce((a,b)=> (b.total/b.max > a.total/a.max ? b : a)) : null;
+  let lowRow  = attended.length ? attended.reduce((a,b)=> (b.total/b.max < a.total/a.max ? b : a)) : null;
+
+  document.getElementById('dash-total-exams').textContent  = total;
+  document.getElementById('dash-total-sub').textContent    = `Live ${totalLive} · InBranch ${totalIB} · Practice ${totalPr}`;
+  document.getElementById('dash-attended').textContent     = attended.length;
+  document.getElementById('dash-attended-sub').textContent = `Live ${attLive} · InBranch ${attIB} · Practice ${attPr}`;
+  document.getElementById('dash-missed').textContent       = absent.length;
+  document.getElementById('dash-missed-sub').textContent   = `Live ${absLive} · InBranch ${absIB} · Practice ${absPr}`;
+  document.getElementById('dash-avg').textContent          = avg.toFixed(1) + '%';
+  document.getElementById('dash-high').textContent         = high.toFixed(0) + '%';
+  document.getElementById('dash-high-sub').textContent     = highRow ? `${highRow.subject} · ${highRow.platform} · ${highRow.max} marks` : '—';
+  document.getElementById('dash-low').textContent          = attended.length ? low.toFixed(0) + '%' : '—';
+  document.getElementById('dash-low-sub').textContent      = lowRow  ? `${lowRow.subject} · ${lowRow.platform} · ${lowRow.max} marks`  : '—';
+}
+
+/* ── Apply Filters (View button) ── */
+function applyFilters() {
+  const f = getFilters();
+  buildListView(f);
+  updateDashboardMetrics(f);
+  /* Reset charts so they redraw with next dashboard switch */
+  chartsInited = false;
+  const currentView = document.getElementById('dashboard-view').style.display !== 'none' ? 'dashboard' : 'list';
+  if (currentView === 'dashboard') initCharts();
+}
+
+/* ── Charts (lazy, re-drawable) ── */
+let chartsInited = false;
+let chartInstances = [];
+function initCharts() {
+  if (chartsInited) return;
+  chartsInited = true;
+  chartInstances.forEach(c => c.destroy());
+  chartInstances = [];
+
+  const isDark = document.body.classList.contains('dark');
+  const gc = isDark ? '#2e2a40' : '#e8e4f0';
+  const tc = isDark ? '#8880a8' : '#999';
+  const baseScale={x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>v+'%'},min:60,max:100}};
+
+  chartInstances.push(new Chart(document.getElementById('c1'),{type:'bar',data:{labels:['Physics','Chem','Math','Bio','ICT','Bangla','Eng'],datasets:[{label:'Live',data:[88,82,90,85,94,86,80],backgroundColor:'#4a90d9',borderRadius:3},{label:'InBranch',data:[84,79,86,88,91,83,77],backgroundColor:'#1D9E75',borderRadius:3},{label:'Practice',data:[92,88,93,91,96,90,84],backgroundColor:'#BA7517',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:baseScale}}));
+
+  chartInstances.push(new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:['Live','InBranch','Practice','Absent'],datasets:[{data:[30,22,22,12],backgroundColor:['#4a90d9','#1D9E75','#BA7517','#E24B4A'],borderWidth:0,hoverOffset:4}]},options:{responsive:false,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%',animation:{duration:600}}}));
+
+  chartInstances.push(new Chart(document.getElementById('c3'),{type:'line',data:{labels:['Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'],datasets:[{label:'Live',data:[78,82,80,85,83,88,87,91],borderColor:'#4a90d9',backgroundColor:'transparent',tension:0.35,pointRadius:3,pointBackgroundColor:'#4a90d9'},{label:'InBranch',data:[75,78,82,80,86,84,89,90],borderColor:'#1D9E75',backgroundColor:'transparent',tension:0.35,pointRadius:3,pointBackgroundColor:'#1D9E75'},{label:'Practice',data:[82,85,86,88,90,92,91,95],borderColor:'#BA7517',backgroundColor:'transparent',tension:0.35,pointRadius:3,pointBackgroundColor:'#BA7517'},{label:'Average',data:[78,82,83,84,86,88,89,92],borderColor:'#aaa',backgroundColor:'transparent',tension:0.35,pointRadius:0,borderDash:[5,4]},{label:'80%',data:[80,80,80,80,80,80,80,80],borderColor:'#4a90d9',backgroundColor:'transparent',pointRadius:0,borderDash:[3,3],borderWidth:1},{label:'90%',data:[90,90,90,90,90,90,90,90],borderColor:'#1D9E75',backgroundColor:'transparent',pointRadius:0,borderDash:[3,3],borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:baseScale}}));
+
+  chartInstances.push(new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['10','20','30','50','100','200','400'],datasets:[{label:'Live',data:[91,88,86,85,83,80,78],backgroundColor:'#7F77DD',borderRadius:3},{label:'InBranch',data:[89,86,84,83,81,79,76],backgroundColor:'#1D9E75',borderRadius:3},{label:'Practice',data:[94,92,90,89,87,84,81],backgroundColor:'#BA7517',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>v+'%'},min:60,max:100}}}}));
+
+  /* ── Performance by Exam Type (c5) — computed from real data ── */
+  const allRows = [...examData, ...finalExamData];
+  const examTypes = ['Daily Exam','Weekly Exam','Monthly Exam','Paper Final Exam','Subject Final Exam'];
+  const etLabels  = ['Daily','Weekly','Monthly','Paper Final','Subject Final'];
+  const etColors  = ['#3C3489','#0F6E56','#854F0B','#A32D2D','#185FA5'];
+  const etData = examTypes.map(et => {
+    const rows = allRows.filter(r => r.examType === et && r.mcq !== 'A');
+    if (!rows.length) return 0;
+    return Math.round(rows.reduce((s,r) => s + (r.total/r.max*100), 0) / rows.length);
+  });
+  chartInstances.push(new Chart(document.getElementById('c5'),{
+    type:'bar',
+    data:{
+      labels: etLabels,
+      datasets:[{
+        label:'Avg Score %',
+        data: etData,
+        backgroundColor: etColors,
+        borderRadius: 5,
+        barPercentage: 0.55,
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label: ctx => ' ' + ctx.parsed.y + '%'}}
+      },
+      scales:{
+        x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},
+        y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>v+'%'},min:0,max:100,
+           afterDataLimits(scale){scale.max=100;}}
+      }
+    }
+  }));
+
+  const subjects=['Physics','Chem','Math','Bio','ICT','Bangla','Eng'];
+  const types=['Live','InBranch','Practice'];
+  const hdata=[[88,82,90,85,94,86,80],[84,79,86,88,91,83,77],[92,88,93,91,96,90,84]];
+  const tColors=['#4a90d9','#1D9E75','#BA7517'];
+  function hc(v){if(v>=90)return{bg:'#9FE1CB',color:'#085041'};if(v>=80)return{bg:'#B5D4F4',color:'#0C447C'};if(v>=70)return{bg:'#FAC775',color:'#633806'};return{bg:'#F5C4B3',color:'#712B13'};}
+  let h='<table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:12px;"><colgroup><col style="width:80px;"/>';
+  subjects.forEach(()=>{h+='<col/>';});
+  h+='</colgroup><tr><td></td>';
+  subjects.forEach(s=>{h+='<th style="padding:5px 4px;color:#555;font-weight:600;text-align:center;font-size:11px;">'+s+'</th>';});
+  h+='</tr>';
+  types.forEach((t,i)=>{
+    h+='<tr><td style="padding:5px 8px 5px 0;font-size:11px;font-weight:700;color:'+tColors[i]+';white-space:nowrap;">'+t+'</td>';
+    hdata[i].forEach(v=>{const c=hc(v);h+='<td style="padding:4px;text-align:center;"><div style="width:100%;padding:5px 2px;border-radius:6px;background:'+c.bg+';color:'+c.color+';font-size:11px;font-weight:700;text-align:center;">'+v+'%</div></td>';});
+    h+='</tr>';
+  });
+  h+='</table><div style="display:flex;gap:14px;margin-top:10px;flex-wrap:wrap;">';
+  [['#9FE1CB','#085041','≥90%'],['#B5D4F4','#0C447C','80–89%'],['#FAC775','#633806','70–79%'],['#F5C4B3','#712B13','<70%']].forEach(([bg,col,label])=>{h+='<span style="font-size:10px;display:flex;align-items:center;gap:4px;color:#777;"><span style="width:12px;height:12px;border-radius:3px;background:'+bg+';display:inline-block;flex-shrink:0;"></span>'+label+'</span>';});
+  h+='</div>';
+  document.getElementById('hm').innerHTML=h;
+}
+
+/* ── Dark Mode ── */
+function toggleDarkMode() {
+  const body = document.body;
+  const icon  = document.getElementById('darkToggleIcon');
+  const label = document.getElementById('darkToggleLabel');
+  body.classList.toggle('dark');
+  const isDark = body.classList.contains('dark');
+  icon.className  = isDark ? 'ti ti-sun' : 'ti ti-moon';
+  label.textContent = isDark ? 'Light' : 'Dark';
+  localStorage.setItem('uou-dark', isDark ? '1' : '0');
+  /* Redraw charts with updated colors */
+  chartsInited = false;
+  const currentView = document.getElementById('dashboard-view').style.display !== 'none' ? 'dashboard' : 'list';
+  if (currentView === 'dashboard') initCharts();
+  /* Rebuild list rows to pick correct absent row bg */
+  buildListView(getFilters());
+}
+/* Restore saved preference */
+if (localStorage.getItem('uou-dark') === '1') {
+  document.body.classList.add('dark');
+  document.getElementById('darkToggleIcon').className = 'ti ti-sun';
+  document.getElementById('darkToggleLabel').textContent = 'Light';
+}
+
+/* ── Init: start on List View ── */
+const defaultFilters = {course:'', subject:'', examType:'', platform:'', mark:'', presence:''};
+buildListView(defaultFilters);
+updateDashboardMetrics(defaultFilters);
+switchView('list');
+</script>
+</body>
+</html>
