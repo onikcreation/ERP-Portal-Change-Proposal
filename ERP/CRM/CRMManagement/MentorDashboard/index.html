@@ -12517,9 +12517,14 @@ function DeselectSelectedOptionAdd(elem) {
                 var selectedDateVal = $('#dateFilter').val();
                 var dateLabel = (!selectedDateVal || selectedDateVal === todayIsoDate()) ? 'Today' : selectedDateVal;
 
+                // Widths widen when a specific calendar date replaces "Today" — the
+                // date text ("(15-July-2026)") is longer than "Today", and the label
+                // must still wrap to exactly two lines (never three), so the narrower
+                // Today-only width isn't enough once a date is showing.
                 var entryColLabel = (dateLabel === 'Today')
                     ? 'Effective Call<br>(CR) Today'
-                    : 'Effective Call<br>(CR) (' + formatDisplayDate(dateLabel) + ')';
+                    : 'Effective Call (CR)<br>(' + formatDisplayDate(dateLabel) + ')';
+                var entryColWidth = (dateLabel === 'Today') ? 105 : 150;
                 var entryTillColLabel = (entryTillFollowsSelectedDate && dateLabel !== 'Today')
                     ? 'Effective Call<br>(CR) Till (' + formatDisplayDate(dateLabel) + ')'
                     : 'Effective Call<br>(CR) Till Today';
@@ -12560,16 +12565,16 @@ function DeselectSelectedOptionAdd(elem) {
                 var headerCells = (viewBy === 'pin')
                     ? (
                         '<th style="width:150px;">Executed By</th>' +
+                        '<th style="width:180px;">Targeted Program</th>' +
                         '<th style="width:120px;">Conversation<br>Type</th>' +
                         '<th style="width:150px;">Data Type</th>' +
-                        '<th style="width:180px;">Targeted Program</th>' +
-                        '<th style="width:110px;">' + entryColLabel + '</th>' +
-                        '<th style="width:100px;">Total Call<br>Time</th>' +
-                        '<th style="width:80px;">Avg. Call<br>Time</th>' +
-                        '<th style="width:80px;">Total<br>Student</th>' +
-                        '<th style="width:160px;">' + entryTillColLabel + '</th>' +
-                        '<th style="width:120px;">Pending Call<br>(NCY+CNR)</th>' +
-                        '<th style="width:90px;">Tracking ID</th>' +
+                        '<th style="width:' + entryColWidth + 'px;">' + entryColLabel + '</th>' +
+                        '<th style="width:85px;">Total Call<br>Time</th>' +
+                        '<th style="width:82px;">Avg. Call<br>Time</th>' +
+                        '<th style="width:70px;">Total<br>Student</th>' +
+                        '<th style="width:125px;">' + entryTillColLabel + '</th>' +
+                        '<th style="width:105px;">Pending Call<br>(NCY+CNR)</th>' +
+                        '<th style="width:85px;">Tracking<br>ID</th>' +
                         '<th style="width:90px;">Creation Date</th>' +
                         '<th style="width:90px;">Deadline</th>' +
                         '<th style="width:70px;">Action</th>'
@@ -12579,13 +12584,13 @@ function DeselectSelectedOptionAdd(elem) {
                         '<th style="width:120px;">Conversation<br>Type</th>' +
                         '<th style="width:150px;">Data Type</th>' +
                         '<th style="width:120px;">Executed By</th>' +
-                        '<th style="width:110px;">' + entryColLabel + '</th>' +
-                        '<th style="width:100px;">Total Call<br>Time</th>' +
-                        '<th style="width:80px;">Avg. Call<br>Time</th>' +
-                        '<th style="width:80px;">Total<br>Student</th>' +
-                        '<th style="width:160px;">' + entryTillColLabel + '</th>' +
-                        '<th style="width:120px;">Pending Call<br>(NCY+CNR)</th>' +
-                        '<th style="width:90px;">Tracking ID</th>' +
+                        '<th style="width:' + entryColWidth + 'px;">' + entryColLabel + '</th>' +
+                        '<th style="width:85px;">Total Call<br>Time</th>' +
+                        '<th style="width:82px;">Avg. Call<br>Time</th>' +
+                        '<th style="width:70px;">Total<br>Student</th>' +
+                        '<th style="width:125px;">' + entryTillColLabel + '</th>' +
+                        '<th style="width:105px;">Pending Call<br>(NCY+CNR)</th>' +
+                        '<th style="width:85px;">Tracking<br>ID</th>' +
                         '<th style="width:90px;">Creation Date</th>' +
                         '<th style="width:90px;">Deadline</th>' +
                         '<th style="width:70px;">Action</th>'
@@ -12697,6 +12702,7 @@ function DeselectSelectedOptionAdd(elem) {
                             }
 
                             $tr.append(td(entry.ExecutedBy));
+
                             var entryTodayCount = dateAdjust(entry.TodayDateEntry, dateLabel);
                             $tr.append(entryLinkTd(
                                 [{ trackingId: item.TrackingId, executedBy: entry.ExecutedBy, count: entryTodayCount }],
@@ -12843,9 +12849,9 @@ function DeselectSelectedOptionAdd(elem) {
                             );
                         }
 
+                        $tr.append(td(r.TargetedProgram));
                         $tr.append(td(r.ConversationType));
                         $tr.append(td(r.DataType));
-                        $tr.append(td(r.TargetedProgram));
                         var rowToday = dateAdjust(r.TodayDateEntry, dateLabel);
                         $tr.append(entryLinkTd(
                             [{ trackingId: r.TrackingId, executedBy: r.ExecutedBy, count: rowToday }],
@@ -13231,6 +13237,9 @@ function DeselectSelectedOptionAdd(elem) {
                     <ol style="padding-left:20px; margin:0;">
                       <li>
                         <strong>"Avg. Call Time" কলামের আগে নতুন কলাম "Total Call Time" যোগ করতে হবে।</strong> Programwise ও Pinwise - দুই ভিউতেই এই কলাম যোগ হবে। এই কলামে প্রতিটা টিম মেম্বার নির্দিষ্ট কেসে মোট কতক্ষণ কল করেছেন তা দেখাবে, এবং Case Total/Program-group Total/Person Total/Grand Total - সবগুলো Total রো-তেও এই কলামের যোগফল দেখাবে।
+                      </li>
+                      <li>
+                        <strong>Programwise/Pinwise ভিউতে "Executed By" কলামের সিরিয়াল পরিবর্তন করতে হবে।</strong> Programwise ভিউতে "Executed By" ৪ নম্বর কলামে দেখাতে হবে (Targeted Program, Conversation Type, Data Type, Executed By)। Pinwise ভিউতে "Executed By" ১ নম্বর কলামে দেখাতে হবে (Executed By, Targeted Program, Conversation Type, Data Type)। বাকি কলাম আগের ক্রমেই থাকবে।
                       </li>
                     </ol>
                   </div>
