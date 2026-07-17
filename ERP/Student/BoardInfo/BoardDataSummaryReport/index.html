@@ -17444,29 +17444,29 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                         <input type="hidden" id="isLastSessionStr" value="Not Last Session">
                         <div class="form-horizontal">
                           <div class="form-group">
-                            <label class="control-label col-md-2" for="Report_Type:">
-                              Report Type:
+                            <label class="control-label col-md-2" for="Organization:">
+                              Organization:
                             </label>
                             <div class="col-md-4">
-                              <select class="form-control" id="reportType" name="reportType" style="min-width:100%">
-                                <option selected="selected" value="1">
-                                  Program Wise
+                              <select class="form-control" data-val="true" data-val-required="The Int64 field is required." id="organizationId" name="organizationId" style="min-width:100%">
+                                <option selected="selected" value="0">
+                                  All Organization
+                                </option>
+                                <option value="1">
+                                  UDVASH
                                 </option>
                                 <option value="2">
-                                  Branch Wise
+                                  UNMESH
                                 </option>
-                                <option value="3">
-                                  Branch Program Wise
+                                <option value="13">
+                                  ONLINE CARE
                                 </option>
-                                <option value="4">
-                                  Mentor Wise Summary
-                                </option>
-                                <option value="5">
-                                  Mentor Branch Wise Summary
+                                <option value="12">
+                                  UTTORON
                                 </option>
                               </select>
                             </div>
-                            <label class="control-label col-md-2" for="Class:">
+                          <label class="control-label col-md-2" for="Class:">
                               Class:
                             </label>
                             <div class="col-md-4">
@@ -17527,30 +17527,6 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                                 </option>
                               </select>
                             </div>
-                            <label class="control-label col-md-2" for="Organization:">
-                              Organization:
-                            </label>
-                            <div class="col-md-4">
-                              <select class="form-control" data-val="true" data-val-required="The Int64 field is required." id="organizationId" name="organizationId" style="min-width:100%">
-                                <option selected="selected" value="0">
-                                  All Organization
-                                </option>
-                                <option value="1">
-                                  UDVASH
-                                </option>
-                                <option value="2">
-                                  UNMESH
-                                </option>
-                                <option value="13">
-                                  ONLINE CARE
-                                </option>
-                                <option value="12">
-                                  UTTORON
-                                </option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="form-group">
                             <label class="control-label col-md-2" for="Program:">
                               Program:
                             </label>
@@ -17864,6 +17840,8 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                                   </option>
                               </select>
                             </div>
+                          </div>
+                          <div class="form-group">
                             <label class="control-label col-md-2" for="Session:">
                               Session:
                             </label>
@@ -17961,15 +17939,15 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                                   </option>
                                 </select>
                             </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="control-label col-md-2" for="Course:">
+                          <label class="control-label col-md-2" for="Course:">
                               Course:
                             </label>
                             <div class="col-md-4">
                               <select class="form-control" id="courseFilter" multiple="multiple" name="courseFilter" style="min-width:100%">
                               </select>
                             </div>
+                          </div>
+                          <div class="form-group">
                             <label class="control-label col-md-2" for="Branch_Mentor:">
                               Branch Mentor:
                             </label>
@@ -18019,9 +17997,7 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                                 </option>
                               </select>
                             </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="control-label col-md-2" for="Branch:">
+                          <label class="control-label col-md-2" for="Branch:">
                               Branch:
                             </label>
                             <div class="col-md-4">
@@ -18152,6 +18128,8 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                                 <option value="Uttara House Building">Uttara House Building</option>
                               </select>
                             </div>
+                          </div>
+                          <div class="form-group">
                             <label class="control-label col-md-2" for="Board:">
                               Board:
                             </label>
@@ -18159,6 +18137,28 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                               <select class="form-control" id="boardFilter" multiple="multiple" name="boardFilter" style="min-width:100%">
                                 <option value="SSC">SSC</option>
                                 <option value="HSC">HSC</option>
+                              </select>
+                            </div>
+                          <label class="control-label col-md-2" for="Report_Type:">
+                              Report Type:
+                            </label>
+                            <div class="col-md-4">
+                              <select class="form-control" id="reportType" name="reportType" style="min-width:100%">
+                                <option selected="selected" value="1">
+                                  Program Wise
+                                </option>
+                                <option value="2">
+                                  Branch Wise
+                                </option>
+                                <option value="3">
+                                  Branch Program Wise
+                                </option>
+                                <option value="4">
+                                  Mentor Wise Summary
+                                </option>
+                                <option value="5">
+                                  Mentor Branch Wise Summary
+                                </option>
                               </select>
                             </div>
                           </div>
@@ -57687,7 +57687,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-hours" style="display: none;">
                                         <table class=" table-condensed">
                                           <thead>
@@ -57801,7 +57801,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-days" style="display: block;">
                                         <table class=" table-condensed">
                                           <thead>
@@ -57990,7 +57990,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-months" style="display: none;">
                                         <table class="table-condensed">
                                           <thead>
@@ -58058,7 +58058,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-years" style="display: none;">
                                         <table class="table-condensed">
                                           <thead>
@@ -58126,8 +58126,8 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
-                                    </div>
+                          </div>
+                          </div>
                                     <div class="datetimepicker datetimepicker-dropdown-bottom-right dropdown-menu" style="left: 1353.39px; z-index: 1150;">
                                       <div class="datetimepicker-minutes" style="display: none;">
                                         <table class=" table-condensed">
@@ -58201,7 +58201,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-hours" style="display: none;">
                                         <table class=" table-condensed">
                                           <thead>
@@ -58315,7 +58315,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-days" style="display: block;">
                                         <table class=" table-condensed">
                                           <thead>
@@ -58504,7 +58504,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-months" style="display: none;">
                                         <table class="table-condensed">
                                           <thead>
@@ -58572,7 +58572,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
+                          </div>
                                       <div class="datetimepicker-years" style="display: none;">
                                         <table class="table-condensed">
                                           <thead>
@@ -58640,8 +58640,8 @@ function DeselectSelectedOptionAdd(elem) {
                                             </tr>
                                           </tfoot>
                                         </table>
-                                      </div>
-                                    </div>
+                          </div>
+                          </div>
                                     <script>
                                       // This is a static design demo — it must never navigate away to the
                                       // real umsbd.net site (menu links, notice links, logout, form POST, etc.
@@ -58690,32 +58690,6 @@ function DeselectSelectedOptionAdd(elem) {
                                       // declaration above, same script family) - reused here as-is so the
                                       // fabricated rows show genuine branch/mentor names.
                                       var VIEW_LABELS = { "1": "Program", "2": "Branch", "3": "Branch / Program", "4": "Mentor", "5": "Mentor / Branch" };
-
-                                      // Demo-only (user's explicit request, temporary): Program Wise always shows
-                                      // exactly these 19 real admission programs, in this exact order, instead of
-                                      // the full Program filter-driven list - not wired to #programIds selection.
-                                      // Session is each program's most recent real session from Course Name.xlsx.
-                                      var PROGRAM_WISE_DEMO_ROWS = [
-                                          ["Medical Admission Program", 2027],
-                                          ["Medical Admission Program (Online)", 2027],
-                                          ["Engineering Admission Program", 2027],
-                                          ["Engineering Admission Program (Online)", 2027],
-                                          ["Varsity 'KA' Admission Program", 2027],
-                                          ["Varsity 'KA' Admission Program (Online)", 2027],
-                                          ["Varsity 'KHA' Admission Program", 2027],
-                                          ["Varsity 'KHA' Admission Program (Online)", 2027],
-                                          ["2nd Time Medical Admission Program (Online)", 2026],
-                                          ["2nd Time Varsity 'KA' Admission Program (Online)", 2026],
-                                          ["2nd Time Varsity 'KHA' Admission Program (Online)", 2026],
-                                          ["HSC Model Test", 2026],
-                                          ["HSC Model Test (Online)", 2026],
-                                          ["HSC A to Z Final Revision Course (Online)", 2026],
-                                          ["SSC Model Test", 2027],
-                                          ["SSC Model Test (Online)", 2027],
-                                          ["SSC A to Z Final Revision Course (Online)", 2027],
-                                          ["College Admission Program", 2026],
-                                          ["College Admission Program (Online)", 2026]
-                                      ];
 
                                       function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
@@ -58824,9 +58798,12 @@ function DeselectSelectedOptionAdd(elem) {
                                           return { ssc: false, hsc: true };
                                       }
 
-                                      // Reuses whatever is currently in the Program dropdown (a static full list -
-                                      // no more Class/Program Type cascading) - the selected programs if any,
-                                      // otherwise every program.
+                                      // Reuses whatever is currently in the #programIds dropdown - the explicitly
+                                      // selected programs if any, otherwise every option currently in that select.
+                                      // Since rebuildProgramOptions() already rewrites those options to match the
+                                      // Organization/Class/Program Type cascade, this naturally inherits that
+                                      // narrowing too, with no separate filtering needed here. Used by both
+                                      // Program Wise and Branch Program Wise.
                                       function getProgramList() {
                                           var selected = $("#programIds").val() || [];
                                           var $opts = selected.length
@@ -58841,36 +58818,61 @@ function DeselectSelectedOptionAdd(elem) {
                                           return names;
                                       }
 
-                                      // Picks one real Session for a program (Branch Program Wise's Session
-                                      // column), read straight from the COURSE_DATA rows captured for that
-                                      // program in Course Name.xlsx - a random one of its real sessions, for
-                                      // variety across sub-rows. Falls back to "" for a name not in that sheet
-                                      // (e.g. the "Sample Program" placeholder above).
+                                      // Picks a real Session for a program (Program Wise's and Branch Program
+                                      // Wise's Session column), read straight from the COURSE_DATA rows captured
+                                      // for that program in Course Name.xlsx. If the #sessionIds filter has a specific
+                                      // session selected (not "All Session"), that session is used directly -
+                                      // "-" if this program has no real data under it - so the column always
+                                      // agrees with the Session filter instead of ignoring it. With "All
+                                      // Session" selected, falls back to a random one of the program's real
+                                      // sessions, for variety across sub-rows. Falls back to "" for a name not
+                                      // in that sheet (e.g. the "Sample Program" placeholder above).
                                       function getSessionForProgram(name) {
                                           var idx = COURSE_PROGRAMS.indexOf(name);
                                           if (idx === -1) return "";
                                           var sessions = [];
                                           for (var i = 0; i < COURSE_DATA.length; i++) {
-                                              if (COURSE_DATA[i][1] === idx) sessions.push(COURSE_DATA[i][2]);
+                                              // COURSE_DATA's session column is a raw number (e.g. 2026), not a
+                                              // string - cast so indexOf() below matches sessionText correctly.
+                                              if (COURSE_DATA[i][1] === idx) sessions.push(String(COURSE_DATA[i][2]));
                                           }
-                                          return sessions.length ? sessions[Math.floor(Math.random() * sessions.length)] : "";
+                                          if (!sessions.length) return "";
+                                          var sessionText = $("#sessionIds option:selected").text().trim();
+                                          if (sessionText && sessionText !== "All Session") {
+                                              return sessions.indexOf(sessionText) !== -1 ? sessionText : "-";
+                                          }
+                                          return sessions[Math.floor(Math.random() * sessions.length)];
                                       }
 
-                                      function pickRandomBranches(count) {
-                                          var pool = REAL_BRANCHES.slice();
+                                      // Picks up to `count` distinct entries from list (no replacement, capped
+                                      // by list.length) - Branch Program Wise's per-branch program sub-rows use
+                                      // this so the same program never shows up twice in one branch group (e.g.
+                                      // when the Program filter has narrowed the list down to just one or two
+                                      // programs, every branch simply shows all of them once, not padded out
+                                      // to a random count via repeats).
+                                      function pickDistinct(list, count) {
+                                          var pool = list.slice();
                                           var picked = [];
-                                          for (var i = 0; i < count && pool.length; i++) {
+                                          var n = Math.min(count, pool.length);
+                                          for (var i = 0; i < n; i++) {
                                               var idx = Math.floor(Math.random() * pool.length);
                                               picked.push(pool.splice(idx, 1)[0]);
                                           }
                                           return picked;
                                       }
 
-                                      // #branchFilter selections (if any) - Branch Wise/Branch Program Wise/
-                                      // Mentor Branch Wise Summary views narrow down to exactly these branches
-                                      // instead of showing every branch (or a random subset).
+                                      // #branchFilter explicit selection (if any) takes priority. If nothing is
+                                      // explicitly checked but a specific Branch Mentor is selected, fall back to
+                                      // that mentor's real branches (MENTOR_BRANCH_MAP - the same list the Branch
+                                      // dropdown itself is narrowed to by rebuildBranchOptions()) instead of every
+                                      // branch, since the mentor selection already implies that branch scope.
+                                      // Branch Wise/Branch Program Wise/Mentor Branch Wise Summary views use this.
                                       function getSelectedBranches() {
-                                          return $("#branchFilter").val() || [];
+                                          var explicit = $("#branchFilter").val() || [];
+                                          if (explicit.length) return explicit;
+                                          var mentorId = $("#mentorDropdown").val();
+                                          if (mentorId && mentorId !== "0") return MENTOR_BRANCH_MAP[mentorId] || [];
+                                          return [];
                                       }
 
                                       // #mentorDropdown selection (if not "All") mapped to the matching
@@ -58881,6 +58883,13 @@ function DeselectSelectedOptionAdd(elem) {
                                           if (!val || val === "0") return null;
                                           var idx = MENTOR_IDS.indexOf(val);
                                           return idx !== -1 ? REAL_MENTOR_NAMES[idx] : null;
+                                      }
+
+                                      // Given a mentor's display name, look up their real branches from
+                                      // MENTOR_BRANCH_MAP (same source as the Branch dropdown cascade).
+                                      function branchesForMentorName(name) {
+                                          var idx = REAL_MENTOR_NAMES.indexOf(name);
+                                          return idx !== -1 ? (MENTOR_BRANCH_MAP[MENTOR_IDS[idx]] || []) : [];
                                       }
 
                                       function renderBoardDataSummary() {
@@ -58936,14 +58945,21 @@ function DeselectSelectedOptionAdd(elem) {
                                               tfoot = grandTotalRow(true, 0, gt2.total, gt2.sscC, gt2.sscM, gt2.sscS, gt2.sscNS, gt2.hscC, gt2.hscM, gt2.hscS, gt2.hscNS);
                                           } else if (reportType === "3") {
                                               var programs3 = getProgramList();
+                                              // Explicit #programIds selection: show every selected program in
+                                              // every branch group (getProgramList() already equals exactly that
+                                              // selection) - no random subset. Only when nothing is explicitly
+                                              // checked (showing the whole narrowed-by-Organization/Class/Program
+                                              // Type list, which can run to 100+ programs) does each branch get a
+                                              // random distinct handful instead, for demo variety.
+                                              var explicitPrograms3 = $("#programIds").val() || [];
                                               var branches3 = selectedBranches.length ? selectedBranches : REAL_BRANCHES;
                                               var gt3 = { total: 0, sscC: 0, sscM: 0, sscS: 0, sscNS: 0, hscC: 0, hscM: 0, hscS: 0, hscNS: 0 };
                                               tbody = branches3.map(function (branch) {
-                                                  var progCount = randInt(3, 6);
+                                                  var progsForBranch = explicitPrograms3.length ? programs3 : pickDistinct(programs3, randInt(3, 6));
                                                   var rows = groupHeaderRow(colCount, branch);
                                                   var t = { total: 0, sscC: 0, sscM: 0, sscS: 0, sscNS: 0, hscC: 0, hscM: 0, hscS: 0, hscNS: 0 };
-                                                  for (var i = 0; i < progCount; i++) {
-                                                      var progName = programs3[Math.floor(Math.random() * programs3.length)];
+                                                  for (var i = 0; i < progsForBranch.length; i++) {
+                                                      var progName = progsForBranch[i];
                                                       var applicability = programBoardApplicability(progName);
                                                       var total = randInt(20, 150);
                                                       var ssc = boardStats(total, applicability.ssc);
@@ -58980,7 +58996,10 @@ function DeselectSelectedOptionAdd(elem) {
                                               var mentors5 = selectedMentorName ? [selectedMentorName] : REAL_MENTOR_NAMES;
                                               var gt5 = { total: 0, sscC: 0, sscM: 0, sscS: 0, sscNS: 0, hscC: 0, hscM: 0, hscS: 0, hscNS: 0 };
                                               tbody = mentors5.map(function (mentor) {
-                                                  var branches = selectedBranches.length ? selectedBranches : pickRandomBranches(randInt(2, 4));
+                                                  // No explicit Branch selection: use this specific mentor's real
+                                                  // branches (not a random subset) so the group only ever shows
+                                                  // branches that actually belong to them.
+                                                  var branches = selectedBranches.length ? selectedBranches : branchesForMentorName(mentor);
                                                   var rows = groupHeaderRow(colCount, mentor);
                                                   var t = { total: 0, sscC: 0, sscM: 0, sscS: 0, sscNS: 0, hscC: 0, hscM: 0, hscS: 0, hscNS: 0 };
                                                   branches.forEach(function (branch) {
@@ -59002,12 +59021,15 @@ function DeselectSelectedOptionAdd(elem) {
                                                   return rows;
                                               }).join("");
                                               tfoot = grandTotalRow(false, 0, gt5.total, gt5.sscC, gt5.sscM, gt5.sscS, gt5.sscNS, gt5.hscC, gt5.hscM, gt5.hscS, gt5.hscNS);
-                                          } else { // "1" - Program Wise (default) - fixed 19-program demo list
-                                              // with a Session column (see PROGRAM_WISE_DEMO_ROWS above), not the
-                                              // Program filter-driven list.
+                                          } else { // "1" - Program Wise (default) - driven by the Program filter,
+                                              // same source as Branch Program Wise's getProgramList() (explicit
+                                              // #programIds selection, or every program currently narrowed into
+                                              // that dropdown by Organization/Class/Program Type). Session column
+                                              // uses getSessionForProgram() so it also respects the Session filter.
+                                              var programs1 = getProgramList();
                                               var gt1 = { total: 0, sscC: 0, sscM: 0, sscS: 0, sscNS: 0, hscC: 0, hscM: 0, hscS: 0, hscNS: 0 };
-                                              tbody = PROGRAM_WISE_DEMO_ROWS.map(function (row, i) {
-                                                  var name = row[0], session = row[1];
+                                              tbody = programs1.map(function (name, i) {
+                                                  var session = getSessionForProgram(name);
                                                   var applicability = programBoardApplicability(name);
                                                   var total = randInt(30, 350);
                                                   var ssc = boardStats(total, applicability.ssc);
@@ -59066,7 +59088,7 @@ function DeselectSelectedOptionAdd(elem) {
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff; opacity:.85; text-shadow:none;"><span aria-hidden="true">&times;</span></button>
                                             <button type="button" class="pcm-copy-btn" title="সম্পূর্ণ কনটেন্ট কপি করুন" style="float:right; margin:-2px 8px 0 0; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; border-radius:4px; padding:2px 10px; font-size:12px; line-height:1.6; cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align:-1px; margin-right:4px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>Copy</button>
                                             <h4 class="modal-title" id="pageChangesModalLabel">এই পেইজে যা নতুন পরিবর্তন/আপডেট করা হয়েছে</h4>
-                                          </div>
+                          </div>
                                           <div class="modal-body" style="height:65vh; overflow-y:auto;">
                                             <p style="font-weight:bold; margin-bottom:12px;">সম্পূর্ণ নতুন মেনু তৈরি করতে হবে:</p>
                                             <ol style="padding-left:20px; margin:0;">
@@ -59080,7 +59102,7 @@ function DeselectSelectedOptionAdd(elem) {
                                               </li>
                                               <li style="margin-top:12px;">
                                                 <strong>ফিল্টার অপশন</strong>
-                                                <p style="margin:4px 0 0; color:#555;">Report Type (৫টি ভিউ) → Class (মাল্টি সিলেক্ট) → Program Type (All/Paid/Free, ডিফল্ট Paid) (সিঙ্গেল-সিলেক্ট) → Organization (মাল্টি সিলেক্ট) → Program (মাল্টি সিলেক্ট) → Session (সিঙ্গেল-সিলেক্ট) → Course (মাল্টি সিলেক্ট) → Branch Mentor (সিঙ্গেল-সিলেক্ট) → Branch (মাল্টি সিলেক্ট) → Board (SSC/HSC) (সিঙ্গেল-সিলেক্ট)।</p>
+                                                <p style="margin:4px 0 0; color:#555;">Organization (মাল্টি সিলেক্ট) → Class (মাল্টি সিলেক্ট) → Program Type (All/Paid/Free, ডিফল্ট Paid) (সিঙ্গেল-সিলেক্ট) → Program (মাল্টি সিলেক্ট) → Session (সিঙ্গেল-সিলেক্ট) → Course (মাল্টি সিলেক্ট) → Branch Mentor (সিঙ্গেল-সিলেক্ট) → Branch (মাল্টি সিলেক্ট) → Board (SSC/HSC) (মাল্টি সিলেক্ট) → Report Type (৫টি ভিউ)।</p>
                                               </li>
                                               <li style="margin-top:12px;">
                                                 <strong>ডাটা টেবিল</strong>
@@ -59091,13 +59113,13 @@ function DeselectSelectedOptionAdd(elem) {
                                                 <p style="margin:4px 0 0; color:#555;">Board Data Summary Report মেনুর পারমিশন বিভিন্ন ইউজারকে দেওয়া হবে, তাই এই মেনুটি User Permission Authorisation হিসেবে তৈরি করতে হবে — যাতে ইউজারদেরকে যে ব্রাঞ্চের পারমিশন দেওয়া হবে, সে এই মেনুতে Branch ড্রপডাউনে ঠিক সেই ব্রাঞ্চগুলোই পাবে এবং শুধু সেই ব্রাঞ্চের ডাটাগুলোই দেখতে পাবে।</p>
                                               </li>
                                             </ol>
-                                          </div>
+                          </div>
                                           <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">বন্ধ করুন</button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
+                          </div>
+                          </div>
+                          </div>
+                          </div>
                                     <script>
                                       // Copy button in the "New Updates" popup header — copies
                                       // that modal's full body text to the clipboard. Tries the modern
