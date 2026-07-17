@@ -7892,24 +7892,33 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
     }
                 </style>
                 <style>
-                    #pageChangesBtn {
-                        display: inline-block;
+                    #pageChangesBtnGroup {
+                        display: inline-flex;
+                        gap: 8px;
                         position: absolute;
                         left: 50%;
                         top: 11px;
                         transform: translateX(-50%);
+                        z-index: 1031;
+                    }
+                    #pageChangesBtn, #pageChangesBtnOld {
+                        display: inline-block;
                         padding: 6px 12px;
                         line-height: 1.2;
                         text-align: center;
                         border-radius: 6px;
-                        background: #F59E0B;
                         border: 2px solid #fff;
                         color: #fff !important;
                         font-size: 12.5px;
                         font-weight: bold;
                         white-space: nowrap;
-                        z-index: 1031;
+                    }
+                    #pageChangesBtn {
+                        background: #F59E0B;
                         animation: pageChangesPulse 1.6s infinite;
+                    }
+                    #pageChangesBtnOld {
+                        background: #6B7280;
                     }
                     @keyframes pageChangesPulse {
                         0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, .7); }
@@ -7917,9 +7926,14 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                         100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
                     }
                 </style>
-                <a href="javascript:void(0)" id="pageChangesBtn" data-toggle="modal" data-target="#pageChangesModal" title="এই পেইজে যা যা পরিবর্তন/আপডেট করা হয়েছে">
-                  New Updates
-                </a>
+                <div id="pageChangesBtnGroup">
+                  <a href="javascript:void(0)" id="pageChangesBtn" data-toggle="modal" data-target="#pageChangesModal" title="এই পেইজে যা নতুন পরিবর্তন/আপডেট করা হয়েছে">
+                    New Updates
+                  </a>
+                  <a href="javascript:void(0)" id="pageChangesBtnOld" data-toggle="modal" data-target="#pageChangesModalOld" title="এই পেইজে আগে যা যা পরিবর্তন/আপডেট করা হয়েছিল">
+                    Old Updates
+                  </a>
+                </div>
                 <form action="javascript:void(0)" onsubmit="return false;" class="navbar-right" id="logoutForm" method="post">
                   <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
@@ -11152,7 +11166,24 @@ let feedbackData = [
             <h4 class="modal-title" id="pageChangesModalLabel">এই পেইজে যা যা পরিবর্তন/আপডেট করা হয়েছে</h4>
           </div>
           <div class="modal-body" style="height:65vh; overflow-y:auto;">
-            <p style="font-weight:bold; margin-bottom:12px;">নতুন আপডেট:</p>
+            <p style="color:#555; margin:0;">বর্তমানে এই পেইজে কোনো নতুন প্রস্তাবিত পরিবর্তন নেই।</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">বন্ধ করুন</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="pageChangesModalOld" tabindex="-1" role="dialog" aria-labelledby="pageChangesModalOldLabel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="background:#6B7280; color:#fff; border-top-left-radius:4px; border-top-right-radius:4px;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff; opacity:.85; text-shadow:none;"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="pcm-copy-btn" title="সম্পূর্ণ কনটেন্ট কপি করুন" style="float:right; margin:-2px 8px 0 0; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; border-radius:4px; padding:2px 10px; font-size:12px; line-height:1.6; cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="vertical-align:-1px; margin-right:4px;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>Copy</button>
+            <h4 class="modal-title" id="pageChangesModalOldLabel">এই পেইজে আগে যা যা পরিবর্তন/আপডেট করা হয়েছিল</h4>
+          </div>
+          <div class="modal-body" style="height:65vh; overflow-y:auto;">
+            <p style="font-weight:bold; font-size:15px; margin:0 0 10px; color:#374151; border-bottom:2px solid #6B7280; padding-bottom:4px;">Step 01</p>
             <ol style="padding-left:20px; margin:0;">
               <li style="margin-bottom:16px;">
                 <strong>Student Feedback Add/Edit ফর্মে নতুন "Call Stats Type" ফিল্ড যোগ করা হয়েছে।</strong>
