@@ -8474,7 +8474,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           -
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="106997" data-conversationid="7122">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="106997" data-conversationid="7122" data-ncy="9" data-cnr="5">
                             Entry
                           </button>
                         </td>
@@ -8541,7 +8541,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           -
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="113841" data-conversationid="14041">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="113841" data-conversationid="14041" data-ncy="8" data-cnr="5">
                             Entry
                           </button>
                         </td>
@@ -8608,7 +8608,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           31 Aug, 2026 12:00 AM
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="128580" data-conversationid="28907">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="128580" data-conversationid="28907" data-ncy="310" data-cnr="180">
                             Entry
                           </button>
                         </td>
@@ -8675,7 +8675,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           -
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="133180" data-conversationid="33542">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="133180" data-conversationid="33542" data-ncy="1450" data-cnr="844">
                             Entry
                           </button>
                         </td>
@@ -8709,7 +8709,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           -
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="159062" data-conversationid="59590">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="159062" data-conversationid="59590" data-ncy="1" data-cnr="0">
                             Entry
                           </button>
                         </td>
@@ -8743,7 +8743,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           -
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="180133" data-conversationid="80737">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="180133" data-conversationid="80737" data-ncy="7" data-cnr="4">
                             Entry
                           </button>
                         </td>
@@ -8777,7 +8777,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           30 Dec, 2026 12:00 AM
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="180823" data-conversationid="81427">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="180823" data-conversationid="81427" data-ncy="0" data-cnr="2">
                             Entry
                           </button>
                         </td>
@@ -8844,7 +8844,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           -
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="137830" data-conversationid="38235">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="137830" data-conversationid="38235" data-ncy="240" data-cnr="145">
                             Entry
                           </button>
                         </td>
@@ -8911,7 +8911,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
                           -
                         </td>
                         <td>
-                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="176800" data-conversationid="77396">
+                          <button class="btn btn-sm btn-primary entry" style="" data-trackingid="176800" data-conversationid="77396" data-ncy="1100" data-cnr="631">
                             Entry
                           </button>
                         </td>
@@ -10847,14 +10847,22 @@ function getDPI() {
 
                 let trackingId = $(this).attr('data-trackingId');
                 let conversationId = $(this).attr('data-conversationId');
+                let ncyCount = parseInt($(this).attr('data-ncy'), 10) || 0;
+                let cnrCount = parseInt($(this).attr('data-cnr'), 10) || 0;
 
                 if (firstEntry == 'Entry') {
                     if (trackingId != null && trackingId != '' && conversationId != null && conversationId != '') {
-                        // Demo: the real page opens a new tab straight to the Single Entry detail
-                        // page for the clicked row, no filter step in between — simulated here by
-                        // opening the Conversation Entry demo page with "direct=1", which tells it
-                        // to skip its own filter+list landing view and show the detail view directly.
-                        window.open(siblingPageUrl('ConversationEntry', 'CrmConversationEntry_Offline.html') + '?direct=1', '_blank');
+                        // New: "Pending (NCY+CNR)" bundles two different statuses, so before
+                        // jumping into the Conversation Entry detail view, show a popup letting
+                        // the user pick Not Called Yet only, Call Not Received only, or both
+                        // (both = old behaviour, NCY first then CNR).
+                        $('#entryTypeNcyCount').text(ncyCount);
+                        $('#entryTypeCnrCount').text(cnrCount);
+                        $('#entryTypeModal').data('trackingId', trackingId).data('conversationId', conversationId);
+                        $('#entryTypeNcyBtn').toggle(ncyCount > 0);
+                        $('#entryTypeCnrBtn').toggle(cnrCount > 0);
+                        $('#entryTypeBothBtn').toggle(ncyCount > 0 && cnrCount > 0);
+                        $('#entryTypeModal').modal('show');
                     }
                     else {
                         $.fn.customMessage({
@@ -10867,8 +10875,25 @@ function getDPI() {
                 else {
                     // Demo: no live backend for expiring a conversation — no-op.
                 }
-                
+
             });
+
+            // Demo: the real page opens a new tab straight to the Single Entry detail page
+            // for the clicked row, no filter step in between — simulated here by opening the
+            // Conversation Entry demo page with "direct=1" (skip its own filter+list landing
+            // view) plus a new "entryType" marker (ncy / cnr / both) recording which option the
+            // user picked in the popup above. This offline demo's Conversation Entry page is
+            // still a single static form (no real per-student queue against backend data), so
+            // entryType has no visible effect here yet — on the live site it needs to drive
+            // which subset of students (Not Called Yet only / Call Not Received only / both,
+            // NCY first then CNR) the backend queues up next.
+            function openEntryTypeTarget(entryType) {
+                $('#entryTypeModal').modal('hide');
+                window.open(siblingPageUrl('ConversationEntry', 'CrmConversationEntry_Offline.html') + '?direct=1&entryType=' + entryType, '_blank');
+            }
+            $('#entryTypeNcyBtn').on('click', function () { openEntryTypeTarget('ncy'); });
+            $('#entryTypeCnrBtn').on('click', function () { openEntryTypeTarget('cnr'); });
+            $('#entryTypeBothBtn').on('click', function () { openEntryTypeTarget('both'); });
         });
             </script>
             <script type="text/javascript">
@@ -10971,6 +10996,40 @@ function getDPI() {
             }
           }
         </style>
+        <div class="modal fade" id="entryTypeModal" tabindex="-1" role="dialog" aria-labelledby="entryTypeModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="entryTypeModalLabel">কোন ডাটা গুলোকে কল করতে চান?</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row text-center" style="margin-bottom: 15px;">
+                  <div class="col-xs-6">
+                    <div style="border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                      <div style="font-size: 22px; font-weight: bold;" id="entryTypeNcyCount">0</div>
+                      <div style="color: #555;">Not Called Yet</div>
+                    </div>
+                  </div>
+                  <div class="col-xs-6">
+                    <div style="border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                      <div style="font-size: 22px; font-weight: bold;" id="entryTypeCnrCount">0</div>
+                      <div style="color: #555;">Call Not Received</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center" style="display: flex; flex-direction: column; gap: 8px;">
+                  <button type="button" class="btn btn-primary" id="entryTypeNcyBtn">শুধু Not Called Yet গুলোতে কল করবো</button>
+                  <button type="button" class="btn btn-primary" id="entryTypeCnrBtn">শুধু Call Not Received গুলোতে কল করবো</button>
+                  <button type="button" class="btn btn-success" id="entryTypeBothBtn">দুটো টাইপেই কল করবো, (আগে NCY আসবে তারপর CNR)</button>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">বাতিল করুন</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="modal fade" id="pageChangesModal" tabindex="-1" role="dialog" aria-labelledby="pageChangesModalLabel">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -10980,7 +11039,11 @@ function getDPI() {
                 <h4 class="modal-title" id="pageChangesModalLabel">এই পেইজে যা নতুন পরিবর্তন/আপডেট করা হয়েছে</h4>
               </div>
               <div class="modal-body" style="height:65vh; overflow-y:auto;">
-                <p style="color:#555; margin:0;">বর্তমানে এই পেইজে কোনো নতুন প্রস্তাবিত পরিবর্তন নেই।</p>
+                <p style="margin:0 0 4px;">Action কলামের "Entry" বাটনে ক্লিক করা হলে:</p>
+                <ul style="padding-left:20px; margin:0;">
+                  <li>সরাসরি Conversation Entry পেইজে না গিয়ে প্রথমে একটা পপআপ দেখাবে, যেখানে সেই সারির Not Called Yet ও Call Not Received-এর আলাদা সংখ্যা দেখাবে (0 হলে সেই অপশন দেখাবে না)।</li>
+                  <li>ইউজার চাইলে শুধু Not Called Yet, শুধু Call Not Received, অথবা উভয়ই (আগের মতো NCY আগে তারপর CNR ক্রমে) সিলেক্ট করে এন্ট্রি শুরু করতে পারবে।</li>
+                </ul>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">বন্ধ করুন</button>

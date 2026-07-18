@@ -12285,6 +12285,19 @@ function DeselectSelectedOptionAdd(elem) {
                 });
             });
 
+            // Demo: this page's table only has a combined "Pending (NCY+CNR)" number,
+            // Not Called Yet and Call Not Received aren't counted separately anywhere —
+            // needed for the Entry-button popup below, which lets the user pick just one
+            // of the two instead of always going through NCY then CNR. Split each case's
+            // Pending at a placeholder ~60/40 ratio (NCY heavier, since a case usually
+            // hasn't been touched at all before it's been called and not received) so the
+            // popup shows plausible numbers; the live site needs to fetch these two counts
+            // separately from the backend instead of deriving them like this.
+            $.each(fakeDashboardData, function (_, item) {
+                item.PendingNCY = Math.round((item.Pending || 0) * 0.6);
+                item.PendingCNR = (item.Pending || 0) - item.PendingNCY;
+            });
+
             // Demo: default the date-picker to today, narrow the Branch list to the
             // pre-selected mentor [25], and auto-run Search once on page load — matching
             // the new requirement that Mentor Dashboard opens with a mentor already
@@ -12494,6 +12507,8 @@ function DeselectSelectedOptionAdd(elem) {
                             DataEntry: item.DataEntry,
                             Pending: item.Pending,
                             PendingShare: entry.PendingShare,
+                            PendingNCY: item.PendingNCY,
+                            PendingCNR: item.PendingCNR,
                             ConversationId: item.ConversationId
                         });
                     });
@@ -12726,7 +12741,7 @@ function DeselectSelectedOptionAdd(elem) {
                                 $tr.append(td(item.CreationDate).attr('rowspan', caseRowCount));
                                 $tr.append(td(item.Deadline).attr('rowspan', caseRowCount));
                                 $tr.append(
-                                    actionCell(item.Pending, item.TrackingId, item.ConversationId)
+                                    actionCell(item.Pending, item.TrackingId, item.ConversationId, item.PendingNCY, item.PendingCNR)
                                         .attr('rowspan', caseRowCount)
                                 );
                             }
@@ -12865,7 +12880,7 @@ function DeselectSelectedOptionAdd(elem) {
                         $tr.append(td(r.TrackingId));
                         $tr.append(td(r.CreationDate));
                         $tr.append(td(r.Deadline));
-                        $tr.append(actionCell(r.Pending, r.TrackingId, r.ConversationId));
+                        $tr.append(actionCell(r.Pending, r.TrackingId, r.ConversationId, r.PendingNCY, r.PendingCNR));
 
                         $tbody.append($tr);
                     });
@@ -12910,12 +12925,36 @@ function DeselectSelectedOptionAdd(elem) {
             window.siblingPageUrl = siblingPageUrl;
 
             $(document).on('click', '.entry', function () {
-                // Demo: the real page opens a new tab straight to the Single Entry detail
-                // page for the clicked row, no filter step in between — simulated here by
-                // opening the Conversation Entry demo page with "direct=1", which tells it
-                // to skip its own filter+list landing view and show the detail view directly.
-                window.open(siblingPageUrl('ConversationEntry', 'CrmConversationEntry_Offline.html') + '?direct=1', '_blank');
+                // "Pending (NCY+CNR)" bundles two different statuses, so before jumping
+                // into the Conversation Entry detail view, show a popup letting the user
+                // pick Not Called Yet only, Call Not Received only, or both (both = old
+                // behaviour, NCY first then CNR) — same popup as the Dashboard menu.
+                var ncyCount = parseInt($(this).attr('data-ncy'), 10) || 0;
+                var cnrCount = parseInt($(this).attr('data-cnr'), 10) || 0;
+                $('#entryTypeNcyCount').text(ncyCount);
+                $('#entryTypeCnrCount').text(cnrCount);
+                $('#entryTypeNcyBtn').toggle(ncyCount > 0);
+                $('#entryTypeCnrBtn').toggle(cnrCount > 0);
+                $('#entryTypeBothBtn').toggle(ncyCount > 0 && cnrCount > 0);
+                $('#entryTypeModal').modal('show');
             });
+
+            // Demo: the real page opens a new tab straight to the Single Entry detail page
+            // for the clicked row, no filter step in between — simulated here by opening the
+            // Conversation Entry demo page with "direct=1" (skip its own filter+list landing
+            // view) plus a new "entryType" marker (ncy / cnr / both) recording which option the
+            // user picked in the popup above. This offline demo's Conversation Entry page is
+            // still a single static form (no real per-student queue against backend data), so
+            // entryType has no visible effect here yet — on the live site it needs to drive
+            // which subset of students (Not Called Yet only / Call Not Received only / both,
+            // NCY first then CNR) the backend queues up next.
+            function openEntryTypeTarget(entryType) {
+                $('#entryTypeModal').modal('hide');
+                window.open(siblingPageUrl('ConversationEntry', 'CrmConversationEntry_Offline.html') + '?direct=1&entryType=' + entryType, '_blank');
+            }
+            $('#entryTypeNcyBtn').on('click', function () { openEntryTypeTarget('ncy'); });
+            $('#entryTypeCnrBtn').on('click', function () { openEntryTypeTarget('cnr'); });
+            $('#entryTypeBothBtn').on('click', function () { openEntryTypeTarget('both'); });
 
             function td(val) {
                 return $('<td></td>').text(val === null || val === undefined || val === '' ? '-' : val);
@@ -13065,7 +13104,7 @@ function DeselectSelectedOptionAdd(elem) {
 
             // No Pending data left for this Tracking ID means there's nothing left to
             // enter, so the Entry button is hidden — only rendered when Pending > 0.
-            function actionCell(pending, trackingId, conversationId) {
+            function actionCell(pending, trackingId, conversationId, ncy, cnr) {
                 var $td = $('<td></td>');
                 if ((parseInt(pending, 10) || 0) > 0) {
                     $td.append(
@@ -13073,6 +13112,8 @@ function DeselectSelectedOptionAdd(elem) {
                             .text('Entry')
                             .attr('data-trackingId', trackingId)
                             .attr('data-conversationId', conversationId)
+                            .attr('data-ncy', parseInt(ncy, 10) || 0)
+                            .attr('data-cnr', parseInt(cnr, 10) || 0)
                     );
                 }
                 return $td;
@@ -13224,6 +13265,40 @@ function DeselectSelectedOptionAdd(elem) {
                 }
               }
             </style>
+            <div class="modal fade" id="entryTypeModal" tabindex="-1" role="dialog" aria-labelledby="entryTypeModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="entryTypeModalLabel">কোন ডাটা গুলোকে কল করতে চান?</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row text-center" style="margin-bottom: 15px;">
+                      <div class="col-xs-6">
+                        <div style="border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                          <div style="font-size: 22px; font-weight: bold;" id="entryTypeNcyCount">0</div>
+                          <div style="color: #555;">Not Called Yet</div>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div style="border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                          <div style="font-size: 22px; font-weight: bold;" id="entryTypeCnrCount">0</div>
+                          <div style="color: #555;">Call Not Received</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-center" style="display: flex; flex-direction: column; gap: 8px;">
+                      <button type="button" class="btn btn-primary" id="entryTypeNcyBtn">শুধু Not Called Yet গুলোতে কল করবো</button>
+                      <button type="button" class="btn btn-primary" id="entryTypeCnrBtn">শুধু Call Not Received গুলোতে কল করবো</button>
+                      <button type="button" class="btn btn-success" id="entryTypeBothBtn">দুটো টাইপেই কল করবো, (আগে NCY আসবে তারপর CNR)</button>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">বাতিল করুন</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="modal fade" id="pageChangesModal" tabindex="-1" role="dialog" aria-labelledby="pageChangesModalLabel">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -13238,8 +13313,11 @@ function DeselectSelectedOptionAdd(elem) {
                       <li style="margin-bottom:14px;">
                         <strong>প্রতিটা ব্রাঞ্চ-সেকশনের নামের রো হাইলাইট করতে হবে।</strong> "Bagerhat Udvash (2)"-এর মতো ব্রাঞ্চের নামের হেডিং-এর ফন্ট সাইজ লক্ষণীয়ভাবে বড় করতে হবে, এবং ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট রাখতে হবে - বাম পাশে হালকা নীল কালার থেকে শুরু করে ডান পাশে সাদায় ধীরে ধীরে fade হয়ে যাবে।
                       </li>
-                      <li>
+                      <li style="margin-bottom:14px;">
                         <strong>সেই ব্রাঞ্চের Grand Total রো-ও হাইলাইট করতে হবে।</strong> Grand Total রো-তে সলিড হালকা নীল ব্যাকগ্রাউন্ড কালার (গ্রেডিয়েন্ট না) দিতে হবে - Programwise ও Pinwise দুই ভিউতেই।
+                      </li>
+                      <li>
+                        <strong>Action কলামের "Entry" বাটনে ক্লিক করা হলে সরাসরি Conversation Entry পেইজে না গিয়ে প্রথমে একটা পপআপ দেখাতে হবে</strong>, যেখানে সেই সারির Not Called Yet ও Call Not Received-এর আলাদা সংখ্যা দেখাবে (0 হলে সেই অপশন দেখাবে না)। ইউজার চাইলে শুধু Not Called Yet, শুধু Call Not Received, অথবা উভয়ই (আগের মতো NCY আগে তারপর CNR ক্রমে) সিলেক্ট করে এন্ট্রি শুরু করতে পারবে।
                       </li>
                     </ol>
                   </div>
