@@ -18130,8 +18130,8 @@ span.hide-native-select{position:relative}span.hide-native-select select{border:
                             </div>
                           </div>
                           <div class="form-group">
-                            <label class="control-label col-md-2" for="Board:">
-                              Board:
+                            <label class="control-label col-md-2" for="Name_of_Examination:">
+                              Name of Examination:
                             </label>
                             <div class="col-md-4">
                               <select class="form-control" id="boardFilter" multiple="multiple" name="boardFilter" style="min-width:100%">
@@ -57355,8 +57355,8 @@ function DeselectSelectedOptionAdd(elem) {
                   // there) are tagged the same way by name pattern.
                   var PROGRAM_CLASS_MAP = {"Medical Admission Program":["Admission"],"Medical Admission Program (Online)":["Admission"],"2nd Time Medical Admission Program (Online)":["Admission"],"Engineering Admission Program":["Admission"],"Engineering Admission Program (Online)":["Admission"],"Varsity 'KA' Admission Program":["Admission"],"Varsity 'KA' Admission Program (Online)":["Admission"],"2nd Time Varsity 'KA' Admission Program (Online)":["Admission"],"Varsity 'KHA' Admission Program":["Admission"],"Varsity 'KHA' Admission Program (Online)":["Admission"],"2nd Time Varsity 'KHA' Admission Program (Online)":["Admission"],"College Admission Program":["Admission"],"College Admission Program (Online)":["Admission"],"SSC Model Test":["Model Test"],"SSC Model Test (Online)":["Model Test"],"SSC A to Z Final Revision Course (Online)":["Model Test"],"HSC Model Test":["Model Test"],"HSC Model Test (Online)":["Model Test"],"HSC A to Z Final Revision Course (Online)":["Model Test"],"Cadet College Vorti Prostuti (Online)":[],"Class 6 Academic Program (Online)":["Six"],"Class 7 Academic Program (Online)":["Seven"],"Class 8 Academic Online Program":["Eight"],"Class 9 Academic Program":["Nine"],"Class 9 Academic Online Program":["Nine"],"Class 9 Bangla-English Program":["Nine"],"Class 9 Bangla-English Program (Online)":["Nine"],"Class 10 Academic Online Program":["Ten"],"Class 10 Academic Program":["Ten"],"Class 10 Bangla-English Program":["Ten"],"Class 10 Bangla-English Program (Online)":["Ten"],"2nd Time Medical Admission Program":["Admission"],"HSC ICT Online Program":["Eleven","Twelve"],"HSC Bangla-English Full Program":["Eleven","Twelve"],"Class 11 Academic Program":["Eleven"],"HSC Bangla-English Full Program (Online)":["Eleven","Twelve"],"Class 11 Academic Program (Online)":["Eleven"],"Class 12 Academic Program":["Twelve"],"Class 12 Academic Program Online":["Twelve"],"HSC Final Revision & Pre-Admission Program":["Eleven","Twelve"],"Primary Britti Porikkha Prostuti":[],"Junior Britti Porikkha Prostuti":[],"Class 9-10 Bangla-English Full Course (Online)":["Nine","Ten"],"Class 8 Bangla-English Full Course":["Eight"],"HSC Science Foundation Program":["Eleven","Twelve"],"HSC Science Foundation Program (Online)":["Eleven","Twelve"],"HSC 1st Year Basic Course (Top 100 Topics)":["Eleven"],"HSC 1st Year Crash Course":["Eleven"],"SSC MCQ Booster Program":["Model Test"],"Class 9-10 Bangla-English Full Course":["Nine","Ten"],"Class 9 Academic Program (Online New)":["Nine"],"Class 9 Academic Program (Online)":["Nine"],"Class 8 Academic Program":["Eight"],"Cadet College Vorti Prostuti Free Program":[],"Class 12 Academic Free Program":["Twelve"],"Class 11 Academic Free Program":["Eleven"],"Class 10 Academic Free Program":["Ten"],"Class 9 Academic Free Program":["Nine"],"Class 8 Academic Free Program":["Eight"],"Class 7 Academic Free Program":["Seven"],"Class 6 Academic Free Program":["Six"],"12 Academic Free Class":["Twelve"],"11 Academic Free Class":["Eleven"],"10 Academic Free Class":["Ten"],"9 Academic Free class":["Nine"],"8 Academic Free Class":["Eight"],"Varsity 'KHA'/Bivag Poriborton Free Program":["Admission"],"Udvash-Unmesh Service":[],"HSC Special Program (Online)":["Eleven","Twelve"],"SSC ChemiStar":["Nine","Ten"],"Cadet College Vorti Shomvabona":[],"Employee Training Program (ETP)":[],"HSC ChemiStar":["Eleven","Twelve"],"HSC CIVICS STAR":["Eleven","Twelve"],"SSC Udvashito Mukh":["Nine","Ten"],"Udvash-Unmesh-Uttoron Recruitment Test":[],"Varsity 'KHA' Talent Hunt":["Admission"],"Class 5 MCQ Math Olympiad":["Five"],"Class 6 MCQ Math Olympiad":["Six"],"Class 7 MCQ Math Olympiad":["Seven"],"Class 8 MCQ Math Olympiad":["Eight"],"Class 9 MCQ Math Olympiad":["Nine"],"DU 'KHA' Shomvabona":["Admission"],"HSC Udvashito Mukh":["Eleven","Twelve"],"Class 11 Academic Program (New Batch 4th Porbo)":["Eleven"],"UNMESH Botany Brilliant":["Admission"],"UNMESH Medi Chemistry":["Admission"],"BCS Free Course":["Graduate"],"BCS Preli Program":["Graduate"],"BCS Preli Written Combined Program":["Graduate"],"BCS Written Program":["Graduate"],"BCS Preli Live Exam (Free)":["Graduate"],"BCS Viva Program":["Graduate"],"Special BCS Program":["Graduate"],"BCS Preli Shomvabona":["Graduate"],"General BCS Program":["Graduate"],"Primary Job Preparation":["Graduate"],"BCS Foundation Program":["Graduate"],"BCS Quiz Contest Program":["Graduate"],"BCS Foundation Free Course":["Graduate"],"BCS Advance Program":["Graduate"]};
 
-                  function muliselectfnc(holder, allText) {
-            $(holder).multiselect({
+                  function muliselectfnc(holder, allText, extraOptions) {
+            $(holder).multiselect($.extend({
                 enableCaseInsensitiveFiltering: true,
                 enableFiltering: true,
                 includeSelectAllOption: false,
@@ -57364,7 +57364,7 @@ function DeselectSelectedOptionAdd(elem) {
                 maxHeight: 400,
                 buttonWidth: '100%',
                 nonSelectedText: allText
-            });
+            }, extraOptions));
         }
 
         // Real Organization -> Program -> Course cascading (see COURSE_PROGRAMS/
@@ -57463,10 +57463,12 @@ function DeselectSelectedOptionAdd(elem) {
             // back in.
             window.ORIGINAL_SESSION_OPTIONS_HTML = $('#sessionIds').html();
 
-            muliselectfnc($('#classFilter'), "All Class");
+            muliselectfnc($('#classFilter'), "All Class", { includeSelectAllOption: true });
+            $('#classFilter').multiselect('selectAll', false);
+            $('#classFilter').multiselect('updateButtonText');
             rebuildProgramOptions();
             muliselectfnc($('#branchFilter'), "All Branch");
-            muliselectfnc($('#boardFilter'), "All Board");
+            muliselectfnc($('#boardFilter'), "All Examination");
             rebuildCourseOptions();
 
             window.validateDropDownField("organizationId", "Please Select Organization.");
@@ -59102,7 +59104,7 @@ function DeselectSelectedOptionAdd(elem) {
                                               </li>
                                               <li style="margin-top:12px;">
                                                 <strong>ফিল্টার অপশন</strong>
-                                                <p style="margin:4px 0 0; color:#555;">Organization (মাল্টি সিলেক্ট) → Class (মাল্টি সিলেক্ট) → Program Type (All/Paid/Free, ডিফল্ট Paid) (সিঙ্গেল-সিলেক্ট) → Program (মাল্টি সিলেক্ট) → Session (সিঙ্গেল-সিলেক্ট) → Course (মাল্টি সিলেক্ট) → Branch Mentor (সিঙ্গেল-সিলেক্ট) → Branch (মাল্টি সিলেক্ট) → Board (SSC/HSC) (মাল্টি সিলেক্ট) → Report Type (৫টি ভিউ)।</p>
+                                                <p style="margin:4px 0 0; color:#555;">Organization (মাল্টি সিলেক্ট) → Class (মাল্টি সিলেক্ট, Select All অপশনসহ) → Program Type (All/Paid/Free, ডিফল্ট Paid) (সিঙ্গেল-সিলেক্ট) → Program (মাল্টি সিলেক্ট) → Session (সিঙ্গেল-সিলেক্ট) → Course (মাল্টি সিলেক্ট) → Branch Mentor (সিঙ্গেল-সিলেক্ট) → Branch (মাল্টি সিলেক্ট) → Name of Examination (SSC/HSC) (মাল্টি সিলেক্ট) → Report Type (৫টি ভিউ)।</p>
                                               </li>
                                               <li style="margin-top:12px;">
                                                 <strong>ডাটা টেবিল</strong>
